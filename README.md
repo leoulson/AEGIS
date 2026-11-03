@@ -13,10 +13,10 @@ Site de divulgação (independente do aplicativo): https://aegis-offline.leoulso
 
 ## Galeria visual
 
-### Conceito tridimensional do hardware
-![Estudo 3D isométrico do gabinete AEGIS](docs/assets/aegis-hardware-concept.svg)
+### Hardware de referência — Raspberry Pi 2 Model B
+![Raspberry Pi 2 Model B — renderização ilustrativa](docs/assets/raspberry-pi-2.webp)
 
-*Ilustração isométrica conceitual, não arquivo CAD/STL. Medidas, conectores, energia e ventilação ainda precisam ser validados.*
+*Representação gráfica do Raspberry Pi 2 Model B, plataforma de referência do AEGIS. Esta imagem é ilustrativa, não uma fotografia do hardware real nem um modelo CAD.*
 
 ### Arquitetura técnica
 ![Fluxo de dados local](docs/assets/aegis-architecture.svg)
@@ -45,7 +45,7 @@ Banco padrão: `~/.local/share/aegis/library.sqlite3`. Opcionalmente, use `pytho
 ```text
 aegis/           aplicação de terminal
 content/         dados demonstrativos
-docs/assets/     identidade visual, arquitetura e hardware conceitual
+docs/assets/     identidade visual, arquitetura e imagem do Raspberry Pi 2
 tests/           testes automatizados
 ```
 
