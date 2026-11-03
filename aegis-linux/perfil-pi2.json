@@ -1,0 +1,8 @@
+{
+  "hardware_target": "Raspberry Pi 2",
+  "os_target": "Raspberry Pi OS (32-bit)",
+  "icon_count": 8,
+  "icon_javascript_before_bytes": 594649,
+  "icon_javascript_after_bytes": 2159,
+  "hardware_tested": false
+}

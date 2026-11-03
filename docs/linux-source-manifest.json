@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-03",
+  "base_main": "c6536d35e2849cd0d0ae48087c52710bc9bd9265",
+  "source": "Arquivos locais aegis-linux recuperados no workspace do Projeto AEGIS",
+  "conversation": "Editar Linux проекта",
+  "guest_files_accessed": false,
+  "note": "Hashes anteriores aos ajustes de documentação e à extensão do teste de interface desta publicação. Código do aplicativo copiado sem alteração.",
+  "files": [
+    {
+      "path": "aegis.py",
+      "sha256": "e518299815629ac0533a973a8d8cd6036a8d43344b48afdb815deca59a7eae34"
+    },
+    {
+      "path": "app/index.html",
+      "sha256": "5f5f4f2f6b029f437ce706727c6a748b647aec2705b503afd69378204f59be89"
+    },
+    {
+      "path": "app/medication-core.js",
+      "sha256": "7343a51e63201f42312ed77bb2e4a3672425580d070f4d876cb2a01d63820c82"
+    },
+    {
+      "path": "app/medication-ui.js",
+      "sha256": "44ce2a4db68911f87eed25d3d079a131c540680f6b36281963f6aa8f2b85b225"
+    },
+    {
+      "path": "app/medication.css",
+      "sha256": "7ab491877f968680621fac7e4a600f041754364f7d250fa24964d443877f2d98"
+    },
+    {
+      "path": "app/vendor/icons.js",
+      "sha256": "49b0424ac02a0e59c2dd27b4c99a8704eb4438d04035885f282d4fbccd27c62f"
+    },
+    {
+      "path": "app/vendor/LICENSE-lucide",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "LEIA-ME.md",
+      "sha256": "8346585ada087c3d1d4225c83a62994d5b4a418f9e8b3f72662fc3d52cd1882a"
+    },
+    {
+      "path": "origem.json",
+      "sha256": "fd8b488f660efbc042d262772fdca65c3d6ad93aad1874ffb10523ff87871c2f"
+    },
+    {
+      "path": "perfil-pi2.json",
+      "sha256": "ce12aaaadfc92346c8d6b93946a7ac5264bd5a53b4fad07fb0edb5374e3f6b22"
+    },
+    {
+      "path": "tests/medication.test.cjs",
+      "sha256": "658de668eb14ab2d3bb7164f433b4396020b8010a1db4e60facfec4669cd2683"
+    },
+    {
+      "path": "tests/test_launcher.py",
+      "sha256": "351e808dd60402cc7277eadcc600dba4f7fa6b071c0686e51909561d4bb7e04d"
+    },
+    {
+      "path": "tests/verify-interface.cjs",
+      "sha256": "b634b4ac14b0f325f84e07816a04e8f77c7d38b0bfcebf17d554ec9c4e2735f4"
+    },
+    {
+      "path": "VALIDACAO.md",
+      "sha256": "7c34ecf30cc6358f6465ecd9bd46fb02b27bb169ab70d5f466799a99c40de436"
+    }
+  ]
+}

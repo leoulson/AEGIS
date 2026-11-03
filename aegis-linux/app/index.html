@@ -1,0 +1,91 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AEGIS — Biblioteca local</title><style>html,body{margin:0;min-height:100%;background:#191b21}#aegis-library{min-height:100vh;display:flex;flex-direction:column;border:0!important;border-radius:0!important}#aegis-library .shell{flex:1}</style><link rel="stylesheet" href="medication.css"></head><body><style>
+#aegis-library{--paper:light-dark(#f6f7f4,#141c1b);--panel:light-dark(#ffffff,#1c2624);--ink:light-dark(#203a32,#e2eee8);--soft:light-dark(#61736b,#a3b6ad);--line:light-dark(#dce3dc,#35453e);--accent:light-dark(#21694f,#9bd6b8);--wash:light-dark(#e7efe8,#293e32);font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--paper);border-radius:14px;overflow:hidden;font-size:14px;line-height:1.5;color-scheme:light dark}
+#aegis-library *{box-sizing:border-box}#aegis-library button,#aegis-library input{font:inherit}#aegis-library button{color:inherit}#aegis-library header{display:flex;align-items:center;gap:18px;padding:20px 110px 20px 24px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}#aegis-library .brand{font-size:20px;letter-spacing:3px;font-weight:650}#aegis-library .subbrand{font-size:12px;color:var(--soft)}#aegis-library .offline{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--accent)}#aegis-library .shell{display:grid;grid-template-columns:168px minmax(0,1fr)}#aegis-library nav{border-right:1px solid var(--line);padding:22px 12px;display:flex;flex-direction:column;gap:6px}#aegis-library button{border:0;background:transparent;border-radius:7px;text-align:left;padding:10px 12px;display:flex;align-items:center;gap:9px;min-height:42px}#aegis-library button:hover{background:var(--wash)}#aegis-library button[aria-pressed=true]{background:var(--wash);color:var(--accent)}#aegis-library .nav-label{font-size:11px;letter-spacing:1.5px;color:var(--soft);margin:20px 12px 6px}#aegis-library .aside-note{margin:auto 12px 0;padding-top:36px;font-size:12px;color:var(--soft)}#aegis-library main{min-width:0;padding:30px}#aegis-library h1{font-size:29px;line-height:1.2;font-weight:550;letter-spacing:-1px;margin:7px 0 10px}#aegis-library p{margin:0}#aegis-library .eyebrow{font-size:11px;letter-spacing:1.7px;color:var(--accent)}#aegis-library .muted{color:var(--soft)}#aegis-library .search{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 15px;margin:25px 0 20px}#aegis-library input{width:100%;min-width:0;color:var(--ink);background:transparent;border:0;outline-offset:5px}#aegis-library .columns{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(220px,1fr);gap:22px}#aegis-library h2{font-size:15px;font-weight:600;margin:0 0 14px}#aegis-library .filters{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}#aegis-library .filters button{font-size:12px;padding:5px 10px;min-height:32px;border:1px solid var(--line)}#aegis-library .book{display:flex;gap:13px;padding:17px 0;border-bottom:1px solid var(--line);align-items:flex-start}#aegis-library .cover{width:42px;height:57px;flex-shrink:0;background:var(--wash);border-left:3px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-family:Georgia,serif;font-size:22px;border-radius:2px 5px 5px 2px}#aegis-library .book-name{font-weight:550;font-size:14px}#aegis-library .meta{font-size:12px;color:var(--soft);margin-top:3px}#aegis-library .book button{padding:5px 0;min-height:30px;font-size:12px;color:var(--accent)}#aegis-library .assistant{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;align-self:start}#aegis-library .assistant h2{display:flex;gap:9px;align-items:center}#aegis-library .suggestion{border:1px solid var(--line);margin-top:12px;width:100%;font-size:13px;justify-content:space-between}#aegis-library .composer{display:flex;border:1px solid var(--line);padding:5px 7px 5px 10px;border-radius:8px;margin-top:20px;gap:3px}#aegis-library .composer button{padding:6px;flex-shrink:0;color:var(--accent)}#aegis-library .answer{margin-top:15px;font-size:13px;border-left:2px solid var(--accent);padding-left:12px}#aegis-library .answer:empty{display:none}#aegis-library footer{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;font-size:11px;color:var(--soft);border-top:1px solid var(--line);padding:12px 24px;background:var(--panel)}#aegis-library .detail{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:22px;margin-top:18px}#aegis-library [hidden]{display:none!important}#aegis-library .detail h2{margin:12px 0}#aegis-library svg{flex-shrink:0;width:17px;height:17px}#aegis-library .detail button{border:1px solid var(--line);margin-top:15px}#aegis-library .empty{padding:25px 0;color:var(--soft)}
+@media(max-width:850px){#aegis-library .shell{grid-template-columns:140px minmax(0,1fr)}#aegis-library main{padding:24px 20px}#aegis-library .columns{grid-template-columns:1fr}#aegis-library .assistant{margin-top:4px}}
+@media(max-width:540px){#aegis-library header{padding:18px 100px 18px 18px;gap:8px}#aegis-library .offline{margin-left:0}#aegis-library .shell{display:block}#aegis-library nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line);padding:10px}#aegis-library nav button{font-size:12px;padding:8px}#aegis-library .nav-label,#aegis-library .aside-note{display:none}#aegis-library main{padding:24px 16px}#aegis-library h1{font-size:26px}#aegis-library input{font-size:16px}#aegis-library footer{padding:12px 16px}}
+@media(pointer:coarse){#aegis-library button,#aegis-library .filters button,#aegis-library .book button{min-height:44px}}
+/* Lightweight glass impression: static fills, no filters or animations. */
+#aegis-library {
+ --paper:#eeeae2;--panel:#fbf8f1;--ink:#282c35;--soft:#61616b;
+ --line:#d2cdc3;--accent:#805000;--wash:#e9dfca;
+ --surface-top:#fffdf8;--surface-bottom:#eee9df;--shine:#ffffff;
+ --blue:#315c97;--blue-wash:#e6edf6;--active:#f0dfb8;
+ color-scheme:light; font-family:"Noto Sans","DejaVu Sans",system-ui,sans-serif;
+ background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:16px;
+}
+@media(prefers-color-scheme:dark){
+ #aegis-library {
+  --paper:#191b21;--panel:#252830;--ink:#f0eee8;--soft:#b9b9c3;
+  --line:#41434d;--accent:#edc477;--wash:#383329;
+  --surface-top:#30343e;--surface-bottom:#252830;--shine:#4c505b;
+  --blue:#a8c9ff;--blue-wash:#2b364b;--active:#493e2b;color-scheme:dark;
+ }
+}
+#aegis-library header{background:var(--panel);padding-top:20px;padding-bottom:20px}
+#aegis-library .brand{font-weight:700;letter-spacing:4px}
+#aegis-library .offline{color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:6px 11px;background:var(--paper)}
+#aegis-library .shell{grid-template-columns:180px minmax(0,1fr)}
+#aegis-library nav{margin:16px 0 16px 12px;padding:14px 9px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(155deg,var(--surface-top),var(--surface-bottom));box-shadow:inset 0 1px 0 var(--shine)}
+#aegis-library main{padding:28px 24px}
+#aegis-library h1{font-size:30px;font-weight:600;letter-spacing:-.8px}
+#aegis-library button{border-radius:10px}
+#aegis-library button[aria-pressed=true]{background:var(--active);color:var(--accent);box-shadow:inset 0 1px 0 var(--shine)}
+#aegis-library nav button[aria-pressed=true]{box-shadow:inset 3px 0 0 var(--accent),inset 0 1px 0 var(--shine)}
+#aegis-library .search{border-radius:18px;padding:15px 18px;background:linear-gradient(var(--surface-top),var(--surface-bottom));box-shadow:inset 0 1px 0 var(--shine);margin:24px 0}
+#aegis-library input::placeholder{color:var(--soft);opacity:1}
+#aegis-library .columns{gap:20px}
+#aegis-library .filters{gap:6px}
+#aegis-library .filters button{border-radius:99px;background:var(--panel)}
+#aegis-library .filters button[aria-pressed=true]{background:var(--active)}
+#aegis-library .book{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:9px}
+#aegis-library .cover{background:var(--wash);border-left:3px solid var(--accent);border-radius:3px 6px 6px 3px;box-shadow:inset 0 1px 0 var(--shine)}
+#aegis-library .assistant{border-radius:18px;background:linear-gradient(145deg,var(--surface-top),var(--surface-bottom));box-shadow:inset 0 1px 0 var(--shine);border-top:2px solid var(--blue);padding:20px}
+#aegis-library .assistant h2{color:var(--blue)}
+#aegis-library .suggestion{border-radius:12px;background:var(--panel);padding:12px}
+#aegis-library .composer{border-radius:18px;background:var(--paper);padding:6px 6px 6px 12px}
+#aegis-library .composer button{border-radius:50%;color:var(--blue);background:var(--blue-wash);border:1px solid var(--line)}
+#aegis-library .answer{border-color:var(--blue)}
+#aegis-library .detail{border-radius:16px;background:var(--panel);box-shadow:inset 0 1px 0 var(--shine)}
+#aegis-library footer{background:var(--panel)}
+@media(max-width:850px){#aegis-library .shell{grid-template-columns:160px minmax(0,1fr)}#aegis-library main{padding:24px 20px}}
+@media(max-width:540px){#aegis-library .shell{display:block}#aegis-library nav{margin:12px 12px 0;padding:8px}#aegis-library main{padding:24px 16px}#aegis-library h1{font-size:26px}#aegis-library .search{padding:14px}#aegis-library .assistant{padding:18px}}
+
+</style>
+<div id="aegis-library" lang="pt-BR" aria-label="Proposta de biblioteca médica AEGIS">
+ <header><div><div class="brand">AEGIS<span style="color:var(--accent)">.</span></div><div class="subbrand">Biblioteca médica</div></div><span class="offline"><i data-lucide="hard-drive" aria-hidden="true"></i> Acesso offline</span></header>
+ <div class="shell">
+  <nav aria-label="Navegação principal"><button class="cursor-interaction" data-nav="all" aria-pressed="true"><i data-lucide="library" aria-hidden="true"></i> Biblioteca</button><button class="cursor-interaction" data-nav="saved" aria-pressed="false"><i data-lucide="bookmark" aria-hidden="true"></i> Salvos</button><button class="cursor-interaction" data-nav="sources" aria-pressed="false"><i data-lucide="file-check-2" aria-hidden="true"></i> Fontes</button><div class="nav-label">ESPECIALIDADES</div><button class="cursor-interaction" data-category="Anatomia">Anatomia</button><button class="cursor-interaction" data-category="Fisiologia">Fisiologia</button><button class="cursor-interaction" data-category="Clínica">Clínica médica</button><p class="aside-note">Conhecimento acessível.<br>Mesmo sem conexão.</p></nav>
+  <main><div class="eyebrow">SEU ACERVO, SEMPRE POR PERTO</div><h1>Por onde vamos começar?</h1><p class="muted">Explore a biblioteca ou peça ajuda para encontrar uma referência.</p>
+   <label class="search"><i data-lucide="search" aria-hidden="true"></i><input id="aegis-search" type="search" aria-label="Buscar na biblioteca" placeholder="Busque por tema, obra ou autor"></label>
+   <div class="columns"><section aria-label="Acervo"><h2 id="aegis-list-title">Explore o acervo</h2><div class="filters"><button class="cursor-interaction" data-category="Todos" aria-pressed="true">Todos</button><button class="cursor-interaction" data-category="Anatomia" aria-pressed="false">Anatomia</button><button class="cursor-interaction" data-category="Fisiologia" aria-pressed="false">Fisiologia</button><button class="cursor-interaction" data-category="Clínica" aria-pressed="false">Clínica</button></div><div id="aegis-books" aria-live="polite"></div></section>
+   <aside class="assistant"><h2><i data-lucide="sparkles" aria-hidden="true"></i> Guia do acervo</h2><p class="muted" style="font-size:13px">Encontre obras e trechos relacionados ao que você está estudando.</p><button class="suggestion cursor-interaction" data-prompt="Anatomia">Quero estudar anatomia <i data-lucide="arrow-up-right" aria-hidden="true"></i></button><button class="suggestion cursor-interaction" data-prompt="Fisiologia">Onde encontro fisiologia? <i data-lucide="arrow-up-right" aria-hidden="true"></i></button><div id="aegis-answer" class="answer" role="status"></div><form class="composer"><input aria-label="Pergunte ao guia" placeholder="O que você procura?" required><button type="submit" aria-label="Enviar pergunta" class="cursor-interaction"><i data-lucide="arrow-up" aria-hidden="true"></i></button></form><p class="meta" style="margin-top:10px">Navegação com referências à obra e à página.</p></aside></div>
+   <section class="detail" id="aegis-detail" hidden aria-live="polite"></section>
+  </main>
+ </div><footer><span>PROPOSTA INTERATIVA · Conteúdos ilustrativos</span><span>IA e acervo ainda não conectados</span></footer>
+</div>
+<script>
+(()=>{
+ const root=document.getElementById('aegis-library');
+ const books=[{id:0,name:'Atlas de anatomia humana',category:'Anatomia',letter:'A'},{id:1,name:'Princípios de fisiologia',category:'Fisiologia',letter:'F'},{id:2,name:'Compêndio de clínica médica',category:'Clínica',letter:'C'}];
+ const saved=new Set();let category='Todos',view='all';
+ const list=root.querySelector('#aegis-books'),search=root.querySelector('#aegis-search'),detail=root.querySelector('#aegis-detail');
+ const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ function render(){
+ root.querySelector('#aegis-list-title').textContent=view==='saved'?'Suas referências salvas':view==='sources'?'Origem e direitos das obras':'Explore o acervo';
+ root.querySelectorAll('[data-nav]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.nav===view)));
+ root.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category===category)));
+ const rows=books.filter(b=>(category==='Todos'||b.category===category)&&(view!=='saved'||saved.has(b.id))&&norm(b.name+' '+b.category).includes(norm(search.value)));
+ list.replaceChildren();
+ if(view==='sources'){const p=document.createElement('p');p.className='muted';p.textContent='Cada obra terá autoria, edição, ano, instituição de origem e registro da verificação de domínio público. Os títulos desta prévia são ilustrativos.';list.append(p);return;}
+ rows.forEach(b=>{const item=document.createElement('article');item.className='book';item.innerHTML='<div class="cover" aria-hidden="true">'+b.letter+'</div><div><div class="book-name">'+b.name+'</div><p class="meta">'+b.category+' · Obra de exemplo</p><button class="cursor-interaction" type="button">Explorar referência →</button></div>';item.querySelector('button').onclick=()=>openBook(b);list.append(item);});
+ if(!rows.length){const p=document.createElement('p');p.className='empty';p.textContent=view==='saved'?'Suas referências salvas aparecerão aqui.':'Nenhuma referência encontrada. Tente outro termo.';list.append(p);}
+ }
+ function openBook(b){detail.hidden=false;detail.innerHTML='<div class="eyebrow">PRÉVIA DA REFERÊNCIA</div><h2>'+b.name+'</h2><p class="muted">O leitor exibirá o texto original, o sumário e a página citada pela IA.</p><p class="meta" style="margin-top:12px">Autor, edição, data e origem: a preencher com os dados da obra real. Domínio público: verificação pendente.</p><button class="cursor-interaction" data-save></button><button class="cursor-interaction" data-close>Fechar referência</button>';const button=detail.querySelector('[data-save]');function label(){button.textContent=saved.has(b.id)?'Remover dos salvos':'Salvar referência';}label();button.onclick=()=>{saved.has(b.id)?saved.delete(b.id):saved.add(b.id);label();render();};detail.querySelector('[data-close]').onclick=()=>{detail.hidden=true;};}
+ root.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{category=b.dataset.category;view='all';render();});
+ root.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{view=b.dataset.nav;category='Todos';search.value='';detail.hidden=true;render();});search.oninput=render;
+ function ask(text){const found=books.find(b=>norm(text).includes(norm(b.category)));const answer=root.querySelector('#aegis-answer');answer.textContent=found?'Exemplo de navegação: esta pergunta levaria às referências de '+found.category.toLowerCase()+'. Abra a obra abaixo para conhecer o espaço de leitura.':'Na versão conectada, o guia pesquisará o acervo local e apresentará os trechos com obra, edição e página. Esta prévia demonstra apenas a navegação.';if(found){category=found.category;view='all';search.value='';render();const btn=document.createElement('button');btn.className='cursor-interaction';btn.textContent='Ver referência →';btn.onclick=()=>openBook(found);answer.append(btn);}}
+ root.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>ask(b.dataset.prompt));root.querySelector('form').onsubmit=e=>{e.preventDefault();const input=e.currentTarget.querySelector('input');if(input.value.trim())ask(input.value.trim());input.value='';};render();
+ if(globalThis.Tweak){const state={compact:false};const tweak=new Tweak({container:root,onChange:()=>{root.querySelector('main').style.padding=state.compact?'20px':'';}});tweak.addToggle(state,'compact',{label:'Espaçamento compacto'});}
+})();
+</script>
+<script src="vendor/icons.js"></script><script src="medication-core.js"></script><script src="medication-ui.js"></script></body></html>
