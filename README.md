@@ -4,10 +4,10 @@
 
 ![Identidade visual](docs/assets/aegis-banner.svg)
 
-Protótipo experimental de biblioteca de conhecimento em saúde **offline-first** para **Raspberry Pi 2**. **v0.1.0 — não validado clinicamente.**
+Protótipo experimental de biblioteca de conhecimento em saúde **offline-first** para **Raspberry Pi 2**. **Protótipo de terminal v0.1.0 + interface Linux com calculadora — não validado clinicamente.**
 
 ## Objetivo
-Preservar localmente acesso a materiais educativos e referências em saúde em contextos de conectividade instável. A aplicação executa no Linux do Raspberry Pi, **sem navegador, nuvem ou serviço web**.
+Preservar localmente acesso a materiais educativos e referências em saúde em contextos de conectividade instável. A biblioteca de terminal usa Python e SQLite. O protótipo gráfico em `aegis-linux/` usa Chromium/Chrome para abrir arquivos locais, sem servidor web nem dependência de nuvem durante o uso. As duas interfaces ainda não compartilham o acervo.
 
 Site de divulgação (independente do aplicativo): https://aegis-offline.leoulson.chatgpt.site
 
@@ -41,17 +41,42 @@ python3 -m unittest discover -s tests -v
 
 Banco padrão: `~/.local/share/aegis/library.sqlite3`. Opcionalmente, use `python3 -m aegis --db /caminho/banco.sqlite3 init`. Somente o clone inicial precisa da internet.
 
+## Interface Linux e calculadora recuperadas
+
+**Pacote para download:** [AEGIS-Linux-atualizado.zip](https://github.com/leoulson/AEGIS/raw/refs/heads/main/downloads/AEGIS-Linux-atualizado.zip). Inclui a interface, o lançador, a calculadora, os guias e os testes. Extraia em uma nova pasta para conferir; o download não substitui automaticamente a instalação existente na VM.
+
+Os arquivos locais da conversa “Editar Linux проекта” foram acrescentados em [`aegis-linux/`](aegis-linux/LEIA-ME.md), preservando a biblioteca de terminal existente:
+
+- Interface demonstrativa offline com pesquisa, filtros e salvos temporários.
+- Lançador Python, janela própria/tela cheia, instalação por usuário e XDG Autostart após login.
+- Botão **Calculadora**: dose prescrita em mg/dose, mg/kg/dose ou mg/kg/dia e conversão para mL conforme concentração informada.
+- Cadastro já implementado de paracetamol e ibuprofeno (MSF) e cetirizina (NHS), com fonte, datas, precauções e bloqueios de escopo/limites. Nenhuma dose foi acrescentada ou alterada nesta publicação.
+
+Para visualizar, abra `aegis-linux/app/index.html`. No Linux com sessão gráfica, Python 3.9+ e Chromium/Chrome:
+
+```bash
+python3 aegis-linux/aegis.py --check
+python3 aegis-linux/aegis.py
+```
+
+Instalação e início após login: consulte o [guia Linux](aegis-linux/LEIA-ME.md). A opção `--install` recusa substituir uma instalação existente; baixar esta versão não atualiza automaticamente a cópia instalada.
+
+O alvo continua sendo Raspberry Pi 2 / Raspberry Pi OS de 32 bits. A conversa registra o protótipo anterior funcionando no Debian da VM; esta publicação foi verificada no Windows. **Não foram lidos nem copiados arquivos internos da VM**, nem aplicada esta atualização nela. O funcionamento no Pi 2 físico continua pendente.
+
+Veja [validação e procedência](aegis-linux/VALIDACAO.md) e [manifesto dos arquivos recuperados](docs/linux-source-manifest.json).
+
 ## Estrutura
 ```text
 aegis/           aplicação de terminal
+aegis-linux/     protótipo gráfico, lançador e calculadora offline
 content/         dados demonstrativos
 docs/assets/     identidade visual, arquitetura e imagem do Raspberry Pi 2
 tests/           testes automatizados
 ```
 
 ## Limites e próximos passos
-Não estão implementados: imagem Linux customizada, interface gráfica, rede Wi-Fi local, mapas offline, bateria, sincronização, recursos de IA, biblioteca clínica curada ou arquivo CAD imprimível. Os próximos passos são testar em Raspberry Pi 2 físico, medir desempenho e alimentação, construir um projeto mecânico dimensionado e definir processo de curadoria e licenciamento da literatura.
+Não estão implementados: imagem Linux customizada, integração do acervo SQLite com a interface gráfica, rede Wi-Fi local, mapas offline, bateria, sincronização, recursos de IA, biblioteca clínica curada ou arquivo CAD imprimível. Os próximos passos são testar em Raspberry Pi 2 físico, medir desempenho e alimentação, construir um projeto mecânico dimensionado e definir processo de curadoria e licenciamento da literatura.
 
-**Aviso:** conteúdo exclusivamente demonstrativo. O AEGIS não é dispositivo médico, não oferece diagnóstico, triagem ou prescrição. Materiais clínicos futuros exigem avaliação e atualização editorial.
+**Aviso:** biblioteca demonstrativa e calculadora experimental para conferência aritmética, com referências internacionais que exigem revisão profissional antes de uso clínico. O AEGIS não é dispositivo médico, não oferece diagnóstico, triagem ou prescrição. Materiais clínicos futuros exigem avaliação e atualização editorial.
 
 Código sob licença MIT. Elementos visuais são conceituais.
