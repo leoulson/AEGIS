@@ -1,0 +1,5 @@
+[
+  {"id":"welcome","title":"Bem-vindo ao AEGIS","category":"Sobre o projeto","source":"Equipe AEGIS (texto demonstrativo)","reviewed":"2026-11-03","body":"Protótipo de catálogo local de conhecimento. A consulta funciona sem internet após a importação. Não contém diretrizes clínicas nem fornece recomendações médicas."},
+  {"id":"offline","title":"Como funciona o modo offline","category":"Tecnologia","source":"Documentação interna demonstrativa","reviewed":"2026-11-03","body":"Os documentos são importados de um arquivo JSON local para um banco SQLite. As operações de busca e leitura não usam rede."},
+  {"id":"curation","title":"Critérios de curadoria futura","category":"Governança","source":"Planejamento AEGIS — não validado","reviewed":"2026-11-03","body":"Qualquer conteúdo de saúde requer autoria e licença documentadas, fonte primária rastreável, data de revisão e processo de atualização antes de disponibilização operacional."}
+]
