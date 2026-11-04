@@ -2,7 +2,7 @@
 
 **A conexão cai. O conhecimento permanece.**
 
-![Identidade visual](docs/assets/aegis-banner.svg)
+![Identidade visual AEGIS — escudo laranja e nome completo](docs/assets/aegis-intro-logo.webp)
 
 Protótipo experimental de biblioteca de conhecimento em saúde **offline-first** para **Raspberry Pi 2**. **Protótipo de terminal v0.1.0 + interface Linux com calculadora — não validado clinicamente.**
 
