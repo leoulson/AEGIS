@@ -1,3 +1,8 @@
+> O supervisor desta revisão é 1.1.0 e acrescenta serviços offline e recuperação
+> independente. Consulte [as ferramentas do dispositivo](ferramentas-dispositivo.md)
+> para backup de dados, manifestos do acervo, acessibilidade e atalhos. O código do
+> supervisor continua fora dos payloads e exige instalação explícita por canal confiável.
+
 # Central de atualizações do AEGIS
 
 Esta implementação é uma proposta de código para revisão. Não publica uma Release,

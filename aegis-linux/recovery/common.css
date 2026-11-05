@@ -1,0 +1,28 @@
+#aegis-library,#aegis-library *{box-sizing:border-box}
+/* Trusted shared accessibility layer; also works if the application slot is damaged. */
+:root{color-scheme:dark}#aegis-library{--text-scale:1}
+#aegis-library :focus-visible{outline:3px solid var(--blue,#84cfff)!important;outline-offset:3px!important}
+#aegis-library button,#aegis-library input,#aegis-library select,#aegis-library summary{min-height:44px!important;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#aegis-library h1,#aegis-library h2,#aegis-library h3,#aegis-library p,#aegis-library dd,#aegis-library li{overflow-wrap:anywhere}
+#aegis-library button{cursor:pointer}#aegis-library button:disabled{cursor:default;opacity:.55}
+#aegis-library .device-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.2em;margin:1.2em 0}
+#aegis-library .device-actions{display:flex;gap:.6em;flex-wrap:wrap;margin:1em 0}
+#aegis-library .device-actions button,#aegis-library .device-card button{border:1px solid var(--line)}
+#aegis-library .device-card label{display:flex;flex-wrap:wrap;gap:.7em;align-items:center;margin:1em 0}
+#aegis-library .device-card input[type=checkbox]{width:24px;height:24px;min-height:24px}
+#aegis-library .device-card select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:.5em}
+#aegis-library .device-card dl{display:grid;grid-template-columns:minmax(8em,1fr) minmax(0,2fr);gap:.7em}
+#aegis-library .device-card dd{margin:0}#aegis-library .device-card dt{color:var(--soft)}
+#aegis-library .device-status{padding:1em 0;line-height:1.5}
+#aegis-library .device-dialog,#aegis-library dialog{max-width:min(32em,85vw);max-height:80vh;overflow:auto;background:var(--panel,#252830);color:var(--ink,#fff);border:2px solid var(--accent,#ffd070);border-radius:12px;padding:1.2em;font:inherit}
+#aegis-library dialog::backdrop{background:#000a}#aegis-library dialog button{margin:.8em .5em 0 0}
+#device-menu{display:flex;gap:.6em;flex-wrap:wrap;margin:0 0 1.4em}#device-menu button{border:1px solid var(--line)!important}
+#device-shortcuts{margin:1em 0}#device-shortcuts h2{margin-bottom:.5em}
+html[data-contrast=true] #aegis-library{--paper:#000!important;--panel:#000!important;--ink:#fff!important;--soft:#fff!important;--line:#fff!important;--accent:#ffff00!important;--blue:#91ddff!important;--wash:#171717!important;--active:#333!important;--surface-top:#000!important;--surface-bottom:#000!important;background:#000!important;color:#fff!important}
+html[data-contrast=true] #aegis-library *{box-shadow:none!important;text-shadow:none!important}
+html[data-motion=true] *,html[data-motion=true] *::before,html[data-motion=true] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html[data-text-size='150'] #aegis-library .shell,html[data-text-size='200'] #aegis-library .shell{display:block}
+html[data-text-size='150'] #aegis-library nav,html[data-text-size='200'] #aegis-library nav{display:flex;flex-direction:row;flex-wrap:wrap}
+html[data-text-size='150'] #aegis-library .columns,html[data-text-size='200'] #aegis-library .columns,html[data-text-size='150'] #medication .med-layout,html[data-text-size='200'] #medication .med-layout,html[data-text-size='200'] #medication .med-grid{grid-template-columns:1fr}
+html[data-text-size='200'] #aegis-library .device-card dl{grid-template-columns:1fr}
+@media(max-width:600px){#aegis-library .device-card dl{grid-template-columns:1fr}#aegis-library .device-card{padding:.8em}#aegis-library .device-card dd{margin-bottom:.7em}}

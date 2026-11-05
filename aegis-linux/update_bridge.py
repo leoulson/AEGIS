@@ -10,13 +10,25 @@ import threading
 import time
 import urllib.parse
 
+from device_services import Services, BACKUP_LIMIT
+
 from updater import (MAX_PACKAGE, MAX_EXPANDED, UpdateError, fetch,
                      file_hash, inspect_package, latest_release, version)
 
 
 class Bridge:
-    def __init__(self, manager, root):
+    def __init__(self, manager, root, recovery=False, services=None):
         self.manager, self.root = manager, Path(root)
+        self.recovery = recovery
+        self.services = services or Services(manager)
+        self.restart = threading.Event()
+        self.next_mode = None
+        self.asset_root = manager.source / 'recovery' if recovery else self.root / 'app'
+        try:
+            self.preferences_cache = self.services.preferences()
+        except (OSError, UpdateError):
+            from device_services import DEFAULTS
+            self.preferences_cache = dict(DEFAULTS)
         self.token = secrets.token_urlsafe(32)
         self.guard = threading.Lock()
         self.ready = threading.Event()
@@ -25,18 +37,37 @@ class Bridge:
         self.candidate = None
         self.temp = tempfile.TemporaryDirectory(prefix='session-', dir=manager.home)
         self.package = Path(self.temp.name) / 'candidate.aegis-update'
+        self.backup_package = Path(self.temp.name) / 'import.aegis-backup'
         self.server = ThreadingHTTPServer(('127.0.0.1', 0), self.handler())
         self.server.daemon_threads = True
         self.origin = 'http://127.0.0.1:%d' % self.server.server_port
 
     def status(self):
-        state = self.manager.state()
+        if not self.job['busy']:
+            try:
+                self.preferences_cache = self.services.preferences()
+            except (OSError, UpdateError):
+                pass
+        try:
+            state = self.manager.state()
+        except (OSError, UpdateError):
+            state = {'current': None, 'previous': None, 'pending': None, 'error': 'Estado do aplicativo ilegível; recuperação independente aberta.'}
+        def info(slot):
+            try:
+                return self.manager.info(slot)['version'] if slot else None
+            except (OSError, UpdateError, KeyError):
+                return None
         with self.guard:
-            return {'installed': self.manager.info(state['current'])['version'],
-                    'previous': self.manager.info(state['previous'])['version'] if state['previous'] else None,
-                    'pending': self.manager.info(state['pending'])['version'] if state['pending'] else None,
+            return {'installed': info(state['current']),
+                    'previous': info(state['previous']),
+                    'pending': info(state['pending']),
                     'trust_ready': self.manager.trusted(), 'recovery': state['error'],
-                    'candidate': self.candidate, 'job': dict(self.job)}
+                    'candidate': self.candidate, 'job': dict(self.job), 'recovery_mode': self.recovery,
+                    'diagnostic': self.services.diagnostic, 'verification': self.services.verification,
+                    'preferences': self.preferences_cache, 'notice': self.services.recovery_reason,
+                    'backup_candidate': self.services.backup_candidate,
+                    'backup_ready': bool(self.services.backup_download),
+                    'logs': self.services.logs(), 'restore_incomplete': self.services.journal.exists()}
 
     def message(self, message, progress=0):
         with self.guard:
@@ -44,6 +75,8 @@ class Bridge:
 
     def reserve(self):
         with self.guard:
+            if self.restart.is_set():
+                raise UpdateError('O aplicativo está encerrando esta sessão.')
             if self.job['busy']:
                 raise UpdateError('Outra operação está em andamento.')
             self.job = {'busy': True, 'message': 'Iniciando…', 'progress': 0, 'error': False}
@@ -60,8 +93,10 @@ class Bridge:
             with self.guard:
                 self.job['busy'] = False
 
-    def submit(self, task):
+    def submit(self, task, operation='update'):
         self.reserve()
+        with self.guard:
+            self.job['operation'] = operation
         self.executor.submit(self.finish, task)
 
     def discard(self):
@@ -119,6 +154,41 @@ class Bridge:
         self.message(self.manager.restore(), 100)
         self.discard()
 
+    def installed(self):
+        installed = self.status()['installed']
+        if installed is None:
+            raise UpdateError('Versão local ilegível. Repare o supervisor antes de restaurar dados.')
+        return installed
+
+    def preview_backup(self):
+        self.services.backup_candidate = None
+        try:
+            manifest = self.services.inspect_backup(self.backup_package, self.installed())
+            self.backup_hash = file_hash(self.backup_package)
+            self.services.backup_candidate = {k: manifest[k] for k in ('app_version', 'created_at', 'origin', 'scope')}
+            self.services.backup_candidate.update(id=secrets.token_urlsafe(24), files=len(manifest['files']),
+                size=sum(f['size'] for f in manifest['files'].values()), authenticity='Hashes conferidos; autenticidade não comprovada.')
+            self.message('Backup conferido. Revise origem, data e alcance antes de restaurar.', 100)
+        except Exception:
+            self.backup_package.unlink(missing_ok=True)
+            raise
+
+    def create_backup(self):
+        target = Path(self.temp.name) / ('dados-' + secrets.token_hex(8) + '.aegis-backup')
+        self.services.create_backup(target, self.installed(), self.message)
+        self.message('Backup consistente criado. Use Salvar backup para escolher o destino.', 100)
+
+    def restore_data(self, candidate_id):
+        if not self.recovery:
+            raise UpdateError('Feche a interface principal e abra o modo de recuperação para restaurar dados.')
+        candidate = self.services.backup_candidate
+        if not candidate or candidate['id'] != candidate_id or file_hash(self.backup_package) != self.backup_hash:
+            raise UpdateError('Confira novamente o backup antes de restaurar.')
+        result = self.services.restore_backup(self.backup_package, self.installed(), self.message)
+        self.services.backup_candidate = None
+        self.preferences_cache = self.services.preferences()
+        self.message(result['message'], 100)
+
     def handler(self):
         bridge = self
 
@@ -162,19 +232,45 @@ class Bridge:
                     self.reply(403, {'error': 'Sessão local inválida.'})
                     return
                 try:
+                    if self.path in ('/api/diagnostic-report', '/api/backup-download'):
+                        if self.path == '/api/diagnostic-report':
+                            if bridge.services.diagnostic is None:
+                                raise UpdateError('Atualize o diagnóstico antes de exportar.')
+                            data = json.dumps(bridge.services.diagnostic, ensure_ascii=False, indent=2).encode()
+                            self.reply(200, data, 'application/json')
+                        else:
+                            path = bridge.services.backup_download
+                            if not path or not path.is_file():
+                                raise UpdateError('Crie um backup antes de salvar.')
+                            self.send_response(200)
+                            self.send_header('Content-Type', 'application/octet-stream')
+                            self.send_header('Content-Length', str(path.stat().st_size))
+                            self.send_header('Cache-Control', 'no-store')
+                            self.end_headers()
+                            with path.open('rb') as src:
+                                import shutil
+                                shutil.copyfileobj(src, self.wfile, 65536)
+                        return
                     if self.path == '/api/status':
                         self.reply(200, bridge.status())
                         return
                     name = urllib.parse.unquote(urllib.parse.urlsplit(self.path).path)
                     name = 'index.html' if name == '/' else name.lstrip('/')
-                    target = bridge.root / 'app' / name
-                    app = (bridge.root / 'app').resolve()
+                    # Shared UI utilities are part of the trusted supervisor, not the update slot.
+                    base = bridge.asset_root
+                    if name.startswith('support/'):
+                        base = bridge.manager.source / 'recovery'
+                        name = name.removeprefix('support/')
+                    target = base / name
+                    app = base.resolve()
                     if not target.resolve().is_relative_to(app) or not target.is_file():
                         self.reply(404, {'error': 'Arquivo não encontrado.'})
                         return
                     raw = target.read_bytes()
                     if name == 'index.html':
-                        raw = raw.replace(b'</head>', ('<script>globalThis.AEGIS_START_ERRORS=[];addEventListener("error",()=>AEGIS_START_ERRORS.push(true));addEventListener("unhandledrejection",()=>AEGIS_START_ERRORS.push(true));globalThis.AEGIS_SESSION=' + json.dumps(bridge.token) + ';</script></head>').encode())
+                        if not bridge.recovery:
+                            raw = raw.replace(b'</head>', b'<link rel="stylesheet" href="/support/common.css"><script src="/support/common.js"></script></head>')
+                        raw = raw.replace(b'<head>', ('<head><script>globalThis.AEGIS_START_ERRORS=[];addEventListener("error",()=>AEGIS_START_ERRORS.push(true));addEventListener("unhandledrejection",()=>AEGIS_START_ERRORS.push(true));globalThis.AEGIS_SESSION=' + json.dumps(bridge.token) + ';globalThis.AEGIS_RECOVERY=' + json.dumps(bridge.recovery) + ';</script>').encode())
                     self.reply(200, raw, mimetypes.guess_type(name)[0] or 'application/octet-stream')
                 except (OSError, UpdateError):
                     self.reply(500, {'error': 'Falha ao ler a instalação.'})
@@ -187,15 +283,20 @@ class Bridge:
                     if self.headers.get('Transfer-Encoding'):
                         raise UpdateError('Use tamanho explícito para a operação.')
                     length = int(self.headers.get('Content-Length', '-1'))
-                    if length < 0 or length > (MAX_PACKAGE if self.path == '/api/import' else 4096):
+                    if length < 0 or length > (BACKUP_LIMIT if self.path == '/api/backup-import' else MAX_PACKAGE if self.path == '/api/import' else 4096):
                         raise UpdateError('Tamanho da operação inválido ou acima de 48 MiB.')
-                    if self.path == '/api/import':
+                    if self.path in ('/api/import', '/api/backup-import'):
                         bridge.reserve()
                         try:
-                            bridge.discard()
-                            bridge.manager.space(length + MAX_EXPANDED)
+                            is_backup = self.path == '/api/backup-import'
+                            if is_backup:
+                                bridge.services.backup_candidate = None
+                                bridge.backup_package.unlink(missing_ok=True)
+                            else:
+                                bridge.discard()
+                            bridge.manager.space(length + (256 * 1024 * 1024 if is_backup else MAX_EXPANDED))
                             started, remaining = time.monotonic(), length
-                            with bridge.package.open('xb') as out:
+                            with (bridge.backup_package if is_backup else bridge.package).open('xb') as out:
                                 while remaining:
                                     if time.monotonic() - started > 120:
                                         raise UpdateError('Tempo limite da importação excedido.')
@@ -204,7 +305,7 @@ class Bridge:
                                         raise UpdateError('Importação interrompida.')
                                     out.write(block)
                                     remaining -= len(block)
-                            bridge.executor.submit(bridge.finish, bridge.preview)
+                            bridge.executor.submit(bridge.finish, bridge.preview_backup if is_backup else bridge.preview)
                         except Exception as exc:
                             bridge.discard()
                             with bridge.guard:
@@ -217,14 +318,43 @@ class Bridge:
                         body = json.loads(raw or b'{}')
                         if not isinstance(body, dict):
                             raise UpdateError('Operação JSON inválida.')
-                        if self.path == '/api/check':
+                        if self.path == '/api/preferences':
+                            bridge.preferences_cache = bridge.services.preferences(body)
+                        elif self.path == '/api/diagnostics':
+                            bridge.submit(lambda: (bridge.services.diagnostics(), bridge.message('Diagnóstico atualizado.', 100)))
+                        elif self.path == '/api/collection-verify':
+                            bridge.services.cancel.clear()
+                            bridge.submit(lambda: (bridge.services.verify_collection(bridge.message, reset_cancel=False), bridge.message('Verificação concluída.' if not bridge.services.cancel.is_set() else 'Verificação interrompida; os resultados não são uma aprovação completa.', 100)), operation='collection')
+                        elif self.path == '/api/collection-cancel':
+                            bridge.services.cancel.set()
+                        elif self.path == '/api/backup-create':
+                            bridge.submit(bridge.create_backup)
+                        elif self.path == '/api/backup-restore':
+                            bridge.submit(lambda: bridge.restore_data(body.get('id')))
+                        elif self.path == '/api/resume-restore':
+                            if not bridge.recovery:
+                                raise UpdateError('Operação exclusiva do modo de recuperação.')
+                            bridge.submit(lambda: (bridge.services.resume_restore(), bridge.message('Restauração retomada e concluída.', 100)))
+                        elif self.path in ('/api/restart', '/api/recovery'):
+                            with bridge.guard:
+                                if bridge.job['busy']:
+                                    raise UpdateError('Aguarde a operação terminar antes de reiniciar.')
+                            if bridge.services.journal.exists() and self.path == '/api/restart':
+                                raise UpdateError('Conclua a restauração interrompida antes de abrir o aplicativo.')
+                            with bridge.guard:
+                                if bridge.job['busy']:
+                                    raise UpdateError('Aguarde a operação terminar.')
+                                bridge.next_mode = 'recovery' if self.path == '/api/recovery' else 'normal'
+                                bridge.restart.set()
+                        elif self.path == '/api/check':
                             bridge.submit(bridge.check)
                         elif self.path == '/api/install':
                             bridge.submit(lambda: bridge.install(body.get('id')))
                         elif self.path == '/api/restore':
                             bridge.submit(bridge.restore)
                         elif self.path == '/api/ready':
-                            bridge.manager.healthy(bridge.root.name)
+                            if not bridge.recovery:
+                                bridge.manager.healthy(bridge.root.name)
                             bridge.ready.set()
                         else:
                             self.reply(404, {'error': 'Operação desconhecida.'})

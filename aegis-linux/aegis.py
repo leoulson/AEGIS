@@ -68,13 +68,19 @@ def install(managed=False):
     entry = desktop_entry(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(ROOT / "app", target / "app")
-    for filename in ("aegis.py", "updater.py", "update_bridge.py", "LEIA-ME.md", "origem.json"):
+    for filename in ("aegis.py", "updater.py", "update_bridge.py", "device_services.py", "LEIA-ME.md", "origem.json"):
         shutil.copy2(ROOT / filename, target / filename)
+    shutil.copytree(ROOT / "recovery", target / "recovery")
     guide = ROOT / "ATUALIZACOES.md"
     if not guide.is_file():
         guide = ROOT.parent / "docs" / "atualizacoes.md"
     if guide.is_file():
         shutil.copy2(guide, target / "ATUALIZACOES.md")
+    tools_guide = ROOT / "FERRAMENTAS.md"
+    if not tools_guide.is_file():
+        tools_guide = ROOT.parent / "docs" / "ferramentas-dispositivo.md"
+    if tools_guide.is_file():
+        shutil.copy2(tools_guide, target / "FERRAMENTAS.md")
     menu.parent.mkdir(parents=True, exist_ok=True)
     with menu.open("x", encoding="utf-8", newline="\n") as stream:
         stream.write(entry)
@@ -112,7 +118,7 @@ def autostart(enable):
 
 def command(root, browser, kiosk, profile, url=None):
     entry = root / "app/index.html"
-    if not entry.is_file():
+    if url is None and not entry.is_file():
         raise RuntimeError("Interface app/index.html não encontrada.")
     url = url or entry.as_uri()
     args = [browser, "--user-data-dir=" + str(profile), "--no-first-run", "--no-default-browser-check"]
@@ -123,10 +129,10 @@ def command(root, browser, kiosk, profile, url=None):
     return args
 
 
-def launch(kiosk):
+def launch(kiosk, recovery=False):
     require_linux()
     if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
-        raise RuntimeError("Abra este lançador dentro da sessão gráfica do Linux.")
+        raise RuntimeError("Abra este lançador dentro da sessão gráfica do Linux; --diagnose também funciona no terminal.")
     browser = browser_path()
     if not browser:
         raise RuntimeError("Chromium/Chrome não encontrado no PATH.")
@@ -134,34 +140,98 @@ def launch(kiosk):
     profile = target.parent / (APP_ID + "-perfil")
     from updater import Manager, UpdateError
     from update_bridge import Bridge
+    from device_services import Services, LaunchHistory
     import fcntl
     import time
     data = target.parent
     config = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
     manager = Manager(data / "aegis-application-updates", config / "aegis-updater" / "trusted-keys", ROOT)
+    services = Services(manager, data / "aegis")
+    history = LaunchHistory(manager.home)
     with (manager.home / "application.lock").open("a") as session:
         try:
             fcntl.flock(session, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            raise UpdateError("O AEGIS já está aberto. Feche a outra janela antes de iniciar.")
-        manager.bootstrap()
-        profile.mkdir(parents=True, exist_ok=True)
-        # At most one automatic recovery, only during failed startup (never during use).
-        for attempt in range(2):
-            root = manager.boot()
-            bridge = Bridge(manager, root)
-            url = bridge.start()
-            process = None
+            raise UpdateError("O AEGIS já está aberto. Feche a outra janela antes de iniciar a recuperação.")
+        if history.needs_recovery():
+            recovery = True
+            services.recovery_reason = history.state['reason'] or "Inicialização anterior incompleta. O aplicativo não será reiniciado automaticamente."
+        if not recovery:
             try:
+                services.resume_restore()
+                manager.bootstrap()
+            except (OSError, UpdateError):
+                recovery = True
+                services.recovery_reason = "A preparação/inicialização do aplicativo está incompleta. Use as opções independentes de recuperação."
+        profile.mkdir(parents=True, exist_ok=True)
+        # Let browser Save As choose destinations; never change unrelated preferences.
+        prefs = profile / 'Default' / 'Preferences'
+        try:
+            settings = json.loads(prefs.read_text()) if prefs.exists() else {}
+            settings.setdefault('download', {})['prompt_for_download'] = True
+            prefs.parent.mkdir(parents=True, exist_ok=True)
+            from updater import atomic_json
+            atomic_json(prefs, settings)
+        except (OSError, ValueError, TypeError):
+            pass  # File System Access picker remains available; no overwrite of a broken profile.
+        attempts = 0
+        while True:
+            if recovery:
+                root = ROOT
+                services.event('recovery_opened')
+            else:
+                try:
+                    root = manager.boot()
+                except (OSError, UpdateError):
+                    recovery = True
+                    services.recovery_reason = "Os arquivos do aplicativo não passaram na validação de inicialização."
+                    continue
+                history.begin()
+                services.event('startup_started')
+            this_recovery = recovery
+            bridge = Bridge(manager, root, recovery=recovery, services=services)
+            process, normal_close = None, False
+            try:
+                url = bridge.start()
                 process = subprocess.Popen(command(ROOT, browser, kiosk, profile, url))
                 deadline = time.monotonic() + 30
-                while not bridge.ready.wait(0.1):
+                while not bridge.ready.wait(.1):
                     if process.poll() is not None or time.monotonic() > deadline:
                         break
-                if bridge.ready.is_set():
-                    return process.wait()
-                if not manager.state()["trial"]:
-                    raise UpdateError("A interface não confirmou a inicialização. Confira Chromium/sessão gráfica e o registro de recuperação.")
+                healthy = bridge.ready.is_set()
+                if healthy:
+                    if not recovery:
+                        history.ready()
+                        services.event('startup_ready')
+                    while process.poll() is None and not bridge.restart.wait(.2):
+                        pass
+                    if not bridge.restart.is_set():
+                        code = process.wait()
+                        normal_close = code == 0
+                        if recovery or normal_close:
+                            return code
+                        services.recovery_reason = 'A interface encerrou com erro. Escolha uma ação ou saia da recuperação.'
+                elif process.poll() == 0:
+                    normal_close = True
+                    if not recovery:
+                        manager.defer_trial()
+                    return 0
+                elif recovery:
+                    raise UpdateError('A recuperação não abriu no Chromium. Use --diagnose e confira a sessão gráfica; não haverá novas tentativas automáticas.')
+                if bridge.restart.is_set():
+                    normal_close = True
+                    recovery = bridge.next_mode == 'recovery'
+                    history.acknowledge()
+                    if not recovery:
+                        services.resume_restore()
+                        manager.bootstrap()
+                    attempts = 0
+                    continue
+            except (KeyboardInterrupt, SystemExit):
+                normal_close = True
+                if not recovery:
+                    manager.defer_trial()
+                return 0
             finally:
                 if process is not None and process.poll() is None:
                     process.terminate()
@@ -171,13 +241,22 @@ def launch(kiosk):
                         process.kill()
                         process.wait()
                 bridge.close()
-            # Unconfirmed trial remains recorded. boot() restores previous on next pass.
-        raise UpdateError("Falha na inicialização. Abra novamente para recuperar a versão anterior.")
+                if not this_recovery:
+                    history.end(normal_close)
+                    services.event('normal_exit' if normal_close else 'startup_failed')
+            if not recovery:
+                attempts += 1
+                if not healthy and manager.state()['trial'] and attempts < 2:
+                    continue  # Existing atomic rollback, once, only during failed trial startup.
+                recovery = True
+                services.recovery_reason = services.recovery_reason or 'A interface falhou na inicialização. A recuperação está aberta; não há reinicialização em ciclo.'
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
+    group.add_argument("--recovery", action="store_true", help="Abre a recuperação independente da interface principal")
+    group.add_argument("--diagnose", action="store_true", help="Relatório básico JSON sem sessão gráfica nem conteúdo pessoal")
     group.add_argument("--check", action="store_true", help="Diagnóstico sem alterar arquivos")
     group.add_argument("--install-updater", action="store_true", help="Instala a primeira versão com atualizador em pasta/atalho separados, preservando a instalação antiga")
     group.add_argument("--install", action="store_true", help="Instala o protótipo para o usuário atual")
@@ -185,7 +264,14 @@ def main():
     group.add_argument("--disable-autostart", action="store_true", help="Desativa início via XDG")
     group.add_argument("--kiosk", action="store_true", help="Abre em tela cheia; Alt+F4 para sair")
     args = parser.parse_args()
-    if args.check:
+    if args.diagnose:
+        from updater import Manager
+        from device_services import Services
+        target, _, _ = locations()
+        config = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+        manager = Manager(target.parent / "aegis-application-updates", config / "aegis-updater/trusted-keys", ROOT)
+        print(json.dumps(Services(manager).diagnostics(), ensure_ascii=False, indent=2))
+    elif args.check:
         report = {"sistema": platform.system(), "arquitetura": platform.machine(),
                   "python": platform.python_version(), "navegador": browser_path(),
                   "sessao_grafica_linux": bool(os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")),
@@ -197,11 +283,15 @@ def main():
     elif args.enable_autostart or args.disable_autostart:
         autostart(args.enable_autostart)
     else:
-        return launch(args.kiosk)
+        return launch(args.kiosk, recovery=args.recovery)
     return 0
 
 
 if __name__ == "__main__":
+    import signal
+    def terminate_normally(*_):
+        raise SystemExit(0)
+    signal.signal(signal.SIGTERM, terminate_normally)
     try:
         sys.exit(main())
     except (RuntimeError, OSError) as error:

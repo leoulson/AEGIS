@@ -11,7 +11,7 @@
  <div class="update-actions"><button id="update-check" type="button">Verificar atualizações</button><button id="update-import" type="button">Importar pacote de atualização</button><input id="update-file" type="file" accept=".aegis-update" hidden><button id="update-restore" type="button" disabled>Restaurar versão anterior</button></div>
  <p class="meta">O pacote pode estar no armazenamento local ou em um pendrive montado. A importação funciona sem internet. Limite: 48 MiB.</p>
  <div id="update-details" class="update-card" hidden><h2>Conferir atualização</h2><dl id="update-metadata"></dl><h2>O que mudou</h2><p id="update-notes"></p><p>Assinatura verificada com uma chave previamente confiável. A versão atual fica disponível para recuperação.</p><button id="update-install" type="button">Instalar esta atualização</button></div>
- <div id="update-confirm" class="update-card" role="group" aria-label="Confirmar operação" hidden><p id="update-question"></p><div class="update-actions"><button id="update-yes" type="button">Confirmar</button><button id="update-no" type="button">Cancelar</button></div></div>
+ <dialog id="update-confirm" aria-label="Confirmar operação"><p id="update-question"></p><div class="update-actions"><button id="update-yes" type="button">Confirmar</button><button id="update-no" type="button">Cancelar</button></div></dialog>
  <progress id="update-progress" max="100" value="0" aria-label="Progresso da atualização" hidden></progress><p id="update-status" role="status" aria-live="polite"></p>
  <p class="meta">Nenhuma instalação é silenciosa. A versão preparada só entra em uso ao fechar e abrir o AEGIS. Não feche durante a preparação. Dados persistentes não são migrados por este mecanismo.</p>`;
  main.append(panel);
@@ -52,13 +52,17 @@
   }catch(e){error(e);controls(true);}
  }
  async function run(path,body={}){
-  localBusy=true;controls(true);$('confirm').hidden=true;
+  localBusy=true;controls(true);$('confirm').close();
   try{await api(path,body);}catch(e){error(e);localBusy=false;return;}
   localBusy=false;await refresh();
  }
- function confirm(text,action){$('question').textContent=text;confirmAction=action;$('confirm').hidden=false;$('yes').focus();}
- $('yes').onclick=()=>{const action=confirmAction;confirmAction=null;$('confirm').hidden=true;if(action)action();};
- $('no').onclick=()=>{$('confirm').hidden=true;confirmAction=null;};
+ globalThis.AegisDeviceUI?.trap($('confirm'));
+ let dialogTrigger=null;
+ function confirm(text,action){dialogTrigger=document.activeElement;$('question').textContent=text;confirmAction=action;$('confirm').showModal();$('no').focus();}
+ $('confirm').addEventListener('close',()=>{if(dialogTrigger?.isConnected)dialogTrigger.focus();});
+ $('confirm').addEventListener('cancel',()=>{confirmAction=null;});
+ $('yes').onclick=()=>{const action=confirmAction;confirmAction=null;$('confirm').close();if(action)action();};
+ $('no').onclick=()=>{$('confirm').close();confirmAction=null;};
  $('check').onclick=()=>run('check');
  $('import').onclick=()=>$('file').click();
  $('file').onchange=async()=>{

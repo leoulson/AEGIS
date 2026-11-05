@@ -1,6 +1,9 @@
 """Disposable on-device bridge for browser QA. Never serves a real installation."""
 import importlib.util
 import json
+import sqlite3
+import contextlib
+import hashlib
 from pathlib import Path
 import platform
 import shutil
@@ -44,15 +47,31 @@ def main():
         manager.trust.mkdir()
         manager.bootstrap()
         bridge = ipc.Bridge(manager, manager.boot())
+        # Nonclinical fixtures, exclusively inside this test's temporary directory.
+        data = bridge.services.data
+        with contextlib.closing(sqlite3.connect(data / 'library.sqlite3')) as db:
+            db.execute('create table documents (id text, body text)')
+            db.execute("insert into documents values ('qa', 'test only')")
+            db.commit()
+        personal = data / 'personal'
+        personal.mkdir()
+        (personal / 'qa.txt').write_text('personal QA fixture')
+        package_dir = data / 'packages' / 'qa'
+        package_dir.mkdir(parents=True)
+        (package_dir / 'reference.txt').write_bytes(b'Nonclinical test document.')
+        (package_dir / 'manifest.json').write_bytes(u.canonical({'format':1, 'package_id':'qa', 'version':'1.0.0', 'files':{'reference.txt':{'size':len(b'Nonclinical test document.'),'sha256':hashlib.sha256(b'Nonclinical test document.').hexdigest()}}}))
+        recovery = ipc.Bridge(manager, SOURCE, recovery=True)
+        recovery_url = recovery.start()
         url = bridge.start()
         print(json.dumps({'url': url, 'package': str(package), 'public': str(public),
                           'trust_target': str(manager.trust / (u.public_id(public) + '.pem')),
-                          'mode': str(mode), 'home': str(manager.home)}), flush=True)
+                          'mode': str(mode), 'home': str(manager.home), 'recovery_url': recovery_url, 'data': str(data)}), flush=True)
         stop = threading.Event()
         signal.signal(signal.SIGTERM, lambda *_: stop.set())
         signal.signal(signal.SIGINT, lambda *_: stop.set())
         stop.wait()
         bridge.close()
+        recovery.close()
 
 
 if __name__ == '__main__':
