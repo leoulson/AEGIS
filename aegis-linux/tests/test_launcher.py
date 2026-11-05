@@ -93,6 +93,8 @@ class LauncherTests(unittest.TestCase):
         sys.path.insert(0, str(SOURCE))
         from unittest.mock import Mock
         bridge = Mock()
+        import threading
+        bridge.restart = threading.Event()
         bridge.start.return_value = 'http://127.0.0.1:12345/'
         bridge.ready.wait.return_value = True
         bridge.ready.is_set.return_value = True
@@ -111,6 +113,9 @@ class LauncherTests(unittest.TestCase):
         sys.path.insert(0, str(SOURCE))
         from unittest.mock import Mock
         failed, healthy = Mock(), Mock()
+        import threading
+        failed.restart = threading.Event()
+        healthy.restart = threading.Event()
         failed.start.return_value = healthy.start.return_value = 'http://127.0.0.1:12345/'
         failed.ready.wait.return_value = failed.ready.is_set.return_value = False
         healthy.ready.wait.return_value = healthy.ready.is_set.return_value = True
@@ -119,7 +124,8 @@ class LauncherTests(unittest.TestCase):
         manager.boot.side_effect = [SOURCE, SOURCE]
         manager.state.return_value = {'trial': True}
         process = Mock()
-        process.poll.return_value = 1
+        import itertools
+        process.poll.side_effect = itertools.chain([1, 1, 1], itertools.repeat(0))
         process.wait.return_value = 0
         with patch.dict(aegis.os.environ, {'DISPLAY': ':test'}), patch('updater.Manager', return_value=manager), patch('update_bridge.Bridge', side_effect=[failed, healthy]), patch.object(aegis.subprocess, 'Popen', return_value=process) as popen:
             self.assertEqual(aegis.launch(False), 0)
@@ -127,6 +133,46 @@ class LauncherTests(unittest.TestCase):
             self.assertEqual(popen.call_count, 2)
             failed.close.assert_called_once()
             healthy.close.assert_called_once()
+
+    def test_normal_early_close_defers_trial_and_is_not_a_crash(self):
+        import sys, threading
+        sys.path.insert(0, str(SOURCE))
+        from unittest.mock import Mock
+        bridge = Mock()
+        bridge.restart = threading.Event()
+        bridge.ready.wait.return_value = bridge.ready.is_set.return_value = False
+        bridge.start.return_value = 'http://127.0.0.1:12345/'
+        process = Mock()
+        process.poll.return_value = 0
+        process.wait.return_value = 0
+        manager = Mock()
+        manager.home = self.base
+        manager.boot.return_value = SOURCE
+        with patch.dict(aegis.os.environ, {'DISPLAY': ':test'}), patch('updater.Manager', return_value=manager), patch('update_bridge.Bridge', return_value=bridge), patch.object(aegis.subprocess, 'Popen', return_value=process):
+            self.assertEqual(aegis.launch(False), 0)
+        manager.defer_trial.assert_called_once()
+        from device_services import LaunchHistory
+        self.assertFalse(LaunchHistory(self.base).needs_recovery())
+
+    def test_explicit_recovery_skips_application_bootstrap_and_validation(self):
+        import sys, threading
+        sys.path.insert(0, str(SOURCE))
+        from unittest.mock import Mock
+        bridge = Mock()
+        bridge.restart = threading.Event()
+        bridge.ready.wait.return_value = bridge.ready.is_set.return_value = True
+        bridge.start.return_value = 'http://127.0.0.1:12345/'
+        process = Mock()
+        process.poll.return_value = process.wait.return_value = 0
+        manager = Mock()
+        manager.home = self.base
+        with patch.dict(aegis.os.environ, {'DISPLAY': ':test'}), patch('updater.Manager', return_value=manager), patch('update_bridge.Bridge', return_value=bridge) as constructor, patch.object(aegis.subprocess, 'Popen', return_value=process):
+            self.assertEqual(aegis.launch(False, recovery=True), 0)
+        manager.boot.assert_not_called()
+        manager.bootstrap.assert_not_called()
+        self.assertTrue(constructor.call_args.kwargs['recovery'])
+        args = aegis.command(self.base / 'missing-main', '/usr/bin/chromium', False, self.base / 'profile', 'http://127.0.0.1:12345/')
+        self.assertIn('--app=http://127.0.0.1:12345/', args)
 
     def test_desktop_argument_escapes_special_characters(self):
         value = aegis.desktop_arg('/home/A B/$user/100%/a"b')

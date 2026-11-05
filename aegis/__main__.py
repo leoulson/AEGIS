@@ -1,5 +1,7 @@
 """Offline terminal interface for AEGIS — no network or third-party dependencies."""
 import argparse
+import contextlib
+import fcntl
 import json
 import sqlite3
 from pathlib import Path
@@ -8,11 +10,23 @@ ROOT = Path(__file__).resolve().parents[1]
 DB_DEFAULT = Path.home() / '.local' / 'share' / 'aegis' / 'library.sqlite3'
 
 
+@contextlib.contextmanager
+def data_access(database, write=False):
+    database = Path(database).resolve()
+    database.parent.mkdir(parents=True, exist_ok=True)
+    with (database.parent / '.data.lock').open('a') as lock:
+        fcntl.flock(lock, (fcntl.LOCK_EX if write else fcntl.LOCK_SH) | fcntl.LOCK_NB)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
 def initialize(database, source):
     database = Path(database)
     database.parent.mkdir(parents=True, exist_ok=True)
     docs = json.loads(Path(source).read_text(encoding='utf-8'))
-    with sqlite3.connect(str(database)) as db:
+    with data_access(database, write=True), contextlib.closing(sqlite3.connect(str(database))) as db, db:
         db.execute('CREATE TABLE IF NOT EXISTS documents (id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT NOT NULL, source TEXT NOT NULL, reviewed TEXT NOT NULL, body TEXT NOT NULL)')
         for doc in docs:
             db.execute('INSERT OR REPLACE INTO documents VALUES (?, ?, ?, ?, ?, ?)', tuple(doc[k] for k in ('id', 'title', 'category', 'source', 'reviewed', 'body')))
@@ -20,13 +34,13 @@ def initialize(database, source):
 
 
 def search(database, query):
-    with sqlite3.connect(str(database)) as db:
+    with data_access(database), contextlib.closing(sqlite3.connect(str(database))) as db:
         db.row_factory = sqlite3.Row
         return [dict(r) for r in db.execute('SELECT id, title, category, source, reviewed FROM documents WHERE title LIKE ? OR body LIKE ? OR category LIKE ? ORDER BY title LIMIT 50', ['%' + query + '%'] * 3)]
 
 
 def read(database, document_id):
-    with sqlite3.connect(str(database)) as db:
+    with data_access(database), contextlib.closing(sqlite3.connect(str(database))) as db:
         db.row_factory = sqlite3.Row
         result = db.execute('SELECT * FROM documents WHERE id = ?', (document_id,)).fetchone()
         return dict(result) if result else None

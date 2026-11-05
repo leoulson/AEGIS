@@ -123,6 +123,7 @@ const {chromium} = require(process.env.AEGIS_PLAYWRIGHT || 'playwright');
       assert.equal(await page.locator('#updates').isVisible(),false);
       console.log('Update center: missing trust, offline/local import, no releases, interrupted download, online preview, confirmation/cancel, deferred install, pending cancellation, CSRF, navigation and responsive layouts passed.');
     }
+    if(fixture){await context.unroute('**/*');await context.route('**/*',route=>{const url=route.request().url();return url.startsWith(fixture.url)||url.startsWith(fixture.recovery_url)?route.continue():route.abort();});await require('./verify-device.cjs')(page,context,fixture,shots);}
     assert.deepEqual(errors,[]);
     assert.deepEqual(external,[]);
     console.log(JSON.stringify({browser:process.platform+' Chromium',offline:!fixture,network_scope:fixture?'loopback-only':'none',search:true,filters:true,saved:true,sources:true,guide_demo:true,icons:true,medication_manual:true,medication_reference:true,medication_blocks:true,external_requests:external,js_errors:errors,responsive_widths:[1440,1024,390]}));

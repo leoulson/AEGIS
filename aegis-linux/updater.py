@@ -21,7 +21,7 @@ import uuid
 import zipfile
 
 APP_ID = 'org.aegis.offline'
-UPDATER_VERSION = '1.0.0'
+UPDATER_VERSION = '1.1.0'
 MAX_PACKAGE = 48 * 1024 * 1024
 MAX_EXPANDED = 96 * 1024 * 1024
 MAX_FILES = 512
@@ -57,7 +57,7 @@ def parse_json(raw):
         return result
     try:
         return json.loads(raw, object_pairs_hook=unique)
-    except (ValueError, UnicodeError) as exc:
+    except (ValueError, UnicodeError, RecursionError) as exc:
         raise UpdateError('JSON inválido.') from exc
 
 
@@ -460,3 +460,12 @@ class Manager:
                 message = 'Restauração preparada. Feche e abra o AEGIS para aplicar.'
             self.save(state)
             return message
+
+    def defer_trial(self):
+        """User closed the loading window normally: defer, do not label it a crash."""
+        with self.lock():
+            state = self.state()
+            if state['trial'] and state['previous']:
+                state['pending'], state['current'], state['previous'] = state['current'], state['previous'], None
+                state['trial'] = False
+                self.save(state)

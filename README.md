@@ -74,6 +74,13 @@ A instalação requer uma chave pública confiável provisionada separadamente.
 O ZIP antigo não é compatível. Veja o [guia completo](docs/atualizacoes.md) para
 a primeira instalação, assinatura, publicação, limites e testes.
 
+## Ferramentas offline do dispositivo
+
+Configurações inclui diagnóstico real, verificação do acervo, backup/recuperação
+independente, acessibilidade e atalhos persistentes. Veja o
+[guia das ferramentas](docs/ferramentas-dispositivo.md) para acessar cada função,
+testar em instalação isolada e conferir os limites e o roteiro no Raspberry Pi 2.
+
 ## Estrutura
 ```text
 aegis/           aplicação de terminal
