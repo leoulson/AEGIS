@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AEGIS 0.1: launcher for the existing offline interface prototype."""
+"""AEGIS: on-device Chromium launcher and signed update supervisor."""
 import argparse
 import json
 import os
@@ -55,18 +55,26 @@ def desktop_entry(root, kiosk=False):
             "X-AEGIS-Prototype=true\n")
 
 
-def install():
+def install(managed=False):
     require_linux()
     if not browser_path():
         raise RuntimeError("Chromium/Chrome não encontrado. Instale o navegador pelo gerenciador da sua distribuição.")
     target, menu, _ = locations()
+    if managed:
+        target = target.with_name("aegis-updater")
+        menu = menu.with_name("aegis-updater.desktop")
     if target.exists() or target.is_symlink() or menu.exists() or menu.is_symlink():
         raise RuntimeError("Já existem arquivos de instalação AEGIS. Nada foi substituído.")
     entry = desktop_entry(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(ROOT / "app", target / "app")
-    for filename in ("aegis.py", "LEIA-ME.md", "origem.json"):
+    for filename in ("aegis.py", "updater.py", "update_bridge.py", "LEIA-ME.md", "origem.json"):
         shutil.copy2(ROOT / filename, target / filename)
+    guide = ROOT / "ATUALIZACOES.md"
+    if not guide.is_file():
+        guide = ROOT.parent / "docs" / "atualizacoes.md"
+    if guide.is_file():
+        shutil.copy2(guide, target / "ATUALIZACOES.md")
     menu.parent.mkdir(parents=True, exist_ok=True)
     with menu.open("x", encoding="utf-8", newline="\n") as stream:
         stream.write(entry)
@@ -102,15 +110,16 @@ def autostart(enable):
         print("Não há entrada XDG deste protótipo para desativar.")
 
 
-def command(root, browser, kiosk, profile):
+def command(root, browser, kiosk, profile, url=None):
     entry = root / "app/index.html"
     if not entry.is_file():
         raise RuntimeError("Interface app/index.html não encontrada.")
+    url = url or entry.as_uri()
     args = [browser, "--user-data-dir=" + str(profile), "--no-first-run", "--no-default-browser-check"]
     if kiosk:
-        args += ["--kiosk", entry.as_uri()]
+        args += ["--kiosk", url]
     else:
-        args += ["--app=" + entry.as_uri(), "--start-maximized"]
+        args += ["--app=" + url, "--start-maximized"]
     return args
 
 
@@ -123,15 +132,54 @@ def launch(kiosk):
         raise RuntimeError("Chromium/Chrome não encontrado no PATH.")
     target, _, _ = locations()
     profile = target.parent / (APP_ID + "-perfil")
-    args = command(ROOT, browser, kiosk, profile)
-    profile.mkdir(parents=True, exist_ok=True)
-    return subprocess.call(args)  # No shell; preserve the browser's sandbox.
+    from updater import Manager, UpdateError
+    from update_bridge import Bridge
+    import fcntl
+    import time
+    data = target.parent
+    config = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    manager = Manager(data / "aegis-application-updates", config / "aegis-updater" / "trusted-keys", ROOT)
+    with (manager.home / "application.lock").open("a") as session:
+        try:
+            fcntl.flock(session, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise UpdateError("O AEGIS já está aberto. Feche a outra janela antes de iniciar.")
+        manager.bootstrap()
+        profile.mkdir(parents=True, exist_ok=True)
+        # At most one automatic recovery, only during failed startup (never during use).
+        for attempt in range(2):
+            root = manager.boot()
+            bridge = Bridge(manager, root)
+            url = bridge.start()
+            process = None
+            try:
+                process = subprocess.Popen(command(ROOT, browser, kiosk, profile, url))
+                deadline = time.monotonic() + 30
+                while not bridge.ready.wait(0.1):
+                    if process.poll() is not None or time.monotonic() > deadline:
+                        break
+                if bridge.ready.is_set():
+                    return process.wait()
+                if not manager.state()["trial"]:
+                    raise UpdateError("A interface não confirmou a inicialização. Confira Chromium/sessão gráfica e o registro de recuperação.")
+            finally:
+                if process is not None and process.poll() is None:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait()
+                bridge.close()
+            # Unconfirmed trial remains recorded. boot() restores previous on next pass.
+        raise UpdateError("Falha na inicialização. Abra novamente para recuperar a versão anterior.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--check", action="store_true", help="Diagnóstico sem alterar arquivos")
+    group.add_argument("--install-updater", action="store_true", help="Instala a primeira versão com atualizador em pasta/atalho separados, preservando a instalação antiga")
     group.add_argument("--install", action="store_true", help="Instala o protótipo para o usuário atual")
     group.add_argument("--enable-autostart", action="store_true", help="Ativa início após login via XDG")
     group.add_argument("--disable-autostart", action="store_true", help="Desativa início via XDG")
@@ -144,8 +192,8 @@ def main():
                   "interface_encontrada": (ROOT / "app/index.html").is_file(),
                   "estado": "Protótipo de interface; acervo e IA não conectados"}
         print(json.dumps(report, ensure_ascii=False, indent=2))
-    elif args.install:
-        install()
+    elif args.install or args.install_updater:
+        install(managed=args.install_updater)
     elif args.enable_autostart or args.disable_autostart:
         autostart(args.enable_autostart)
     else:

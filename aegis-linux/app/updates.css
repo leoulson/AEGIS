@@ -1,0 +1,14 @@
+#aegis-library #updates{max-width:950px}
+#aegis-library .update-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin:20px 0}
+#aegis-library #updates dl{display:grid;grid-template-columns:minmax(130px,1fr) minmax(0,2fr);gap:10px;margin:0 0 18px}
+#aegis-library #updates dt{color:var(--soft)}
+#aegis-library #updates dd{margin:0;overflow-wrap:anywhere}
+#aegis-library .update-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+#aegis-library #updates button{border:1px solid var(--line);background:var(--wash)}
+#aegis-library #updates button:disabled{opacity:.5;cursor:default}
+#aegis-library #updates p{line-height:1.6;margin:10px 0;overflow-wrap:anywhere}
+#aegis-library #update-notes{white-space:pre-wrap}
+#aegis-library .update-notice{color:var(--accent)}
+#aegis-library #updates .update-error,#aegis-library #update-recovery{color:var(--accent);font-weight:600}
+#aegis-library #updates progress{width:100%;accent-color:var(--accent)}
+@media(max-width:540px){#aegis-library #updates dl{grid-template-columns:1fr;gap:4px}#aegis-library #updates dd{margin-bottom:10px}}

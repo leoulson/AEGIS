@@ -1,3 +1,11 @@
+> **Central de atualizações:** o lançador desta revisão abre a interface existente
+> no Chromium da tela do dispositivo por uma ponte Python restrita a 127.0.0.1.
+> Não há portal para acesso remoto. O HTML direto continua servindo como prévia.
+> Consulte [instalação inicial, pacotes assinados e recuperação](../docs/atualizacoes.md).
+> O ZIP antigo não contém o novo formato de atualização. As instruções abaixo
+> registram a base histórica; para instalar o atualizador sem substituir a cópia
+> antiga, use `python3 aegis.py --install-updater`.
+
 # AEGIS Linux — personalização para Raspberry Pi 2
 
 Base Linux 0.1 • Calculadora 0.2 • Recuperação em 3 de novembro de 2026
