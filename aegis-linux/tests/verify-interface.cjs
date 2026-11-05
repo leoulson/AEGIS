@@ -5,15 +5,17 @@ const assert = require('assert/strict');
 const {chromium} = require(process.env.AEGIS_PLAYWRIGHT || 'playwright');
 
 (async () => {
+  const fixture=process.env.AEGIS_TEST_FIXTURE?JSON.parse(process.env.AEGIS_TEST_FIXTURE):null;
   const root = path.resolve(__dirname, '..');
   const browser = await chromium.launch({executablePath:process.env.AEGIS_CHROME, headless:true});
   try {
-    const context = await browser.newContext({offline:true, colorScheme:'dark', viewport:{width:1440,height:810}});
+    const context = await browser.newContext({offline:!fixture, colorScheme:'dark', viewport:{width:1440,height:810}});
     const page = await context.newPage();
     const errors=[], external=[];
     page.on('pageerror',error=>errors.push(String(error)));
-    page.on('request',request=>{if(/^https?:/.test(request.url()))external.push(request.url());});
-    await page.goto(pathToFileURL(path.join(root,'app/index.html')).href);
+    page.on('request',request=>{if(/^https?:/.test(request.url())&&(!fixture||!request.url().startsWith(fixture.url)))external.push(request.url());});
+    if(fixture) await context.route('**/*',route=>{const url=route.request().url();return url.startsWith(fixture.url)?route.continue():route.abort();});
+    await page.goto(fixture?fixture.url:pathToFileURL(path.join(root,'app/index.html')).href);
     assert.equal(await page.locator('.book').count(),3);
     assert.ok(await page.locator('svg').count()>0);
     await page.getByRole('searchbox').fill('fisiologia');
@@ -71,6 +73,58 @@ const {chromium} = require(process.env.AEGIS_PLAYWRIGHT || 'playwright');
     assert.deepEqual(external,[]);
     await page.getByRole('button',{name:'Biblioteca',exact:true}).click();
     assert.equal(await page.locator('#medication').isVisible(),false);
-    console.log(JSON.stringify({browser:'Chrome/Windows',offline:true,search:true,filters:true,saved:true,sources:true,guide_demo:true,icons:true,medication_manual:true,medication_reference:true,medication_blocks:true,external_requests:external,js_errors:errors,responsive_widths:[1440,1024,390]}));
+    if(fixture){
+      const status=()=>page.locator('#update-status');
+      async function waitMessage(pattern){await page.waitForFunction(pattern=>new RegExp(pattern).test(document.querySelector('#update-status').textContent),pattern);}
+      const settings=()=>page.getByRole('button',{name:'⚙ Configurações',exact:true}).click();
+      await settings();
+      await page.waitForFunction(()=>document.querySelector('#update-installed').textContent==='0.2.0');
+      assert.match(await page.locator('#update-trust').innerText(),/Instalação bloqueada/);
+      assert.equal(await page.locator('#update-restore').isDisabled(),true);
+      // Offline import still rejects a package signed by an unconfigured key.
+      await page.locator('#update-file').setInputFiles(fixture.package);
+      await waitMessage('Chave desconhecida');
+      assert.equal(await page.locator('#update-details').isVisible(),false);
+      // Provision only the temporary fixture's public trust anchor.
+      fs.copyFileSync(fixture.public,fixture.trust_target);
+      fs.writeFileSync(fixture.mode,'offline');
+      await page.locator('#update-check').click();await waitMessage('Sem internet');
+      fs.writeFileSync(fixture.mode,'none');
+      await page.locator('#update-check').click();await waitMessage('Nenhuma Release');
+      fs.writeFileSync(fixture.mode,'download-fail');
+      await page.locator('#update-check').click();await waitMessage('Download interrompido');
+      // A local package succeeds without calling the network fixture.
+      fs.writeFileSync(fixture.mode,'offline');
+      await page.locator('#update-file').setInputFiles(fixture.package);
+      await waitMessage('Pacote autêntico');
+      assert.equal(await page.locator('#update-details img').count(),0);
+      assert.match(await page.locator('#update-metadata').innerText(),/0.3.0/);
+      await page.locator('#update-install').click();
+      await page.locator('#update-no').click();
+      assert.equal(JSON.parse(fs.readFileSync(path.join(fixture.home,'state.json'))).pending,null);
+      await page.locator('#update-install').click();await page.locator('#update-yes').click();
+      await waitMessage('Preparação concluída');
+      assert.match(await page.locator('#update-pending').innerText(),/0.3.0 preparada/);
+      assert.equal(await page.locator('#update-installed').innerText(),'0.2.0');
+      await page.locator('#update-restore').click();await page.locator('#update-yes').click();
+      await waitMessage('pendente cancelada');
+      fs.writeFileSync(fixture.mode,'available');
+      await page.locator('#update-check').click();await waitMessage('Pacote autêntico');
+      // The same details and explicit confirmation are required for online updates.
+      assert.equal(await page.locator('#update-install').isEnabled(),true);
+      if(shots)await page.screenshot({path:path.join(shots,'updates.png'),fullPage:true});
+      const forbidden=await page.request.post(fixture.url+'api/restore',{data:{}});
+      assert.equal(forbidden.status(),403);
+      for(const width of [1440,1024,390]){await page.setViewportSize({width,height:810});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);}
+      await page.getByRole('button',{name:'Biblioteca',exact:true}).click();
+      assert.equal(await page.locator('.book').count(),3);
+      await page.locator('#open-medication').click();
+      assert.equal(await page.locator('#medication').isVisible(),true);
+      assert.equal(await page.locator('#updates').isVisible(),false);
+      console.log('Update center: missing trust, offline/local import, no releases, interrupted download, online preview, confirmation/cancel, deferred install, pending cancellation, CSRF, navigation and responsive layouts passed.');
+    }
+    assert.deepEqual(errors,[]);
+    assert.deepEqual(external,[]);
+    console.log(JSON.stringify({browser:process.platform+' Chromium',offline:!fixture,network_scope:fixture?'loopback-only':'none',search:true,filters:true,saved:true,sources:true,guide_demo:true,icons:true,medication_manual:true,medication_reference:true,medication_blocks:true,external_requests:external,js_errors:errors,responsive_widths:[1440,1024,390]}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -65,6 +65,15 @@ O alvo continua sendo Raspberry Pi 2 / Raspberry Pi OS de 32 bits. A conversa re
 
 Veja [validação e procedência](aegis-linux/VALIDACAO.md) e [manifesto dos arquivos recuperados](docs/linux-source-manifest.json).
 
+## Central de atualizações do aplicativo
+
+O novo lançador acrescenta **Configurações → Atualizações**, com consulta a Releases
+estáveis, pacotes locais assinados, preparação separada e restauração. A interface
+continua no Chromium da tela do dispositivo; a ponte Python atende somente ao loopback.
+A instalação requer uma chave pública confiável provisionada separadamente.
+O ZIP antigo não é compatível. Veja o [guia completo](docs/atualizacoes.md) para
+a primeira instalação, assinatura, publicação, limites e testes.
+
 ## Estrutura
 ```text
 aegis/           aplicação de terminal

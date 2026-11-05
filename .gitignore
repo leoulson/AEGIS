@@ -5,3 +5,8 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+
+# Signing keys belong outside the repository (public trust is provisioned separately).
+*.pem
+*.key
+*.aegis-update

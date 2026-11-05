@@ -32,6 +32,24 @@ class LauncherTests(unittest.TestCase):
         self.assertIn("X-AEGIS-Prototype=true", self.menu.read_text(encoding="utf-8"))
         self.assertFalse(self.start.exists())
 
+    def test_managed_bootstrap_installs_separately_and_copies_supervisor(self):
+        self.target.mkdir(parents=True)
+        marker = self.target / 'personal.txt'
+        marker.write_text('preserve')
+        aegis.install(managed=True)
+        installed = self.target.with_name('aegis-updater')
+        for name in ['aegis.py', 'updater.py', 'update_bridge.py', 'app/updates.js']:
+            self.assertTrue((installed / name).is_file())
+        self.assertTrue(self.menu.with_name('aegis-updater.desktop').is_file())
+        self.assertEqual(marker.read_text(), 'preserve')
+        with self.assertRaises(RuntimeError):
+            aegis.install(managed=True)
+
+    def test_command_supports_authenticated_loopback_window_without_disabling_sandbox(self):
+        args = aegis.command(SOURCE, '/usr/bin/chromium', False, self.base / 'profile', 'http://127.0.0.1:12345/')
+        self.assertIn('--app=http://127.0.0.1:12345/', args)
+        self.assertNotIn('--no-sandbox', args)
+
     def test_duplicate_install_preserves_existing_files(self):
         self.target.mkdir(parents=True)
         existing = self.target / "personal.txt"
@@ -69,6 +87,46 @@ class LauncherTests(unittest.TestCase):
         self.assertNotIn("--no-sandbox", args)
         self.assertNotIn("--disable-web-security", args)
         self.assertTrue(any("profile with spaces" in item for item in args))
+
+    def test_healthy_launch_uses_bridge_and_keeps_single_browser_process(self):
+        import sys
+        sys.path.insert(0, str(SOURCE))
+        from unittest.mock import Mock
+        bridge = Mock()
+        bridge.start.return_value = 'http://127.0.0.1:12345/'
+        bridge.ready.wait.return_value = True
+        bridge.ready.is_set.return_value = True
+        process = Mock()
+        process.wait.return_value = 0
+        process.poll.return_value = 0
+        with patch.dict(aegis.os.environ, {'DISPLAY': ':test'}), patch('update_bridge.Bridge', return_value=bridge), patch.object(aegis.subprocess, 'Popen', return_value=process) as popen:
+            self.assertEqual(aegis.launch(False), 0)
+            popen.assert_called_once()
+            self.assertIn('--app=http://127.0.0.1:12345/', popen.call_args.args[0])
+            process.terminate.assert_not_called()
+            bridge.close.assert_called_once()
+
+    def test_failed_startup_retries_previous_only_during_trial(self):
+        import sys
+        sys.path.insert(0, str(SOURCE))
+        from unittest.mock import Mock
+        failed, healthy = Mock(), Mock()
+        failed.start.return_value = healthy.start.return_value = 'http://127.0.0.1:12345/'
+        failed.ready.wait.return_value = failed.ready.is_set.return_value = False
+        healthy.ready.wait.return_value = healthy.ready.is_set.return_value = True
+        manager = Mock()
+        manager.home = self.base
+        manager.boot.side_effect = [SOURCE, SOURCE]
+        manager.state.return_value = {'trial': True}
+        process = Mock()
+        process.poll.return_value = 1
+        process.wait.return_value = 0
+        with patch.dict(aegis.os.environ, {'DISPLAY': ':test'}), patch('updater.Manager', return_value=manager), patch('update_bridge.Bridge', side_effect=[failed, healthy]), patch.object(aegis.subprocess, 'Popen', return_value=process) as popen:
+            self.assertEqual(aegis.launch(False), 0)
+            self.assertEqual(manager.boot.call_count, 2)
+            self.assertEqual(popen.call_count, 2)
+            failed.close.assert_called_once()
+            healthy.close.assert_called_once()
 
     def test_desktop_argument_escapes_special_characters(self):
         value = aegis.desktop_arg('/home/A B/$user/100%/a"b')
