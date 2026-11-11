@@ -1,3 +1,11 @@
+> O acervo editorial inicial agora gera `app/catalog-data.js` a partir de uma única
+> fonte, conforme [documentação editorial](acervo-editorial.md). Esse recurso estático
+> acompanha a interface e será incluído pelo builder de aplicativo; seu conteúdo
+> permanece explicitamente pendente de revisão profissional. Pacotes externos do
+> acervo, documentos pessoais e modelos continuam fora do atualizador. Revisar também
+> o diff editorial antes de distribuir qualquer novo payload; não publicar fichas
+> pendentes como conteúdo assistencial revisado.
+
 > O supervisor desta revisão é 1.1.0 e acrescenta serviços offline e recuperação
 > independente. Consulte [as ferramentas do dispositivo](ferramentas-dispositivo.md)
 > para backup de dados, manifestos do acervo, acessibilidade e atalhos. O código do

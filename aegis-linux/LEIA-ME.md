@@ -1,3 +1,10 @@
+> **Acervo editorial desta revisão:** sete fichas locais, todas pendentes de revisão
+> profissional. Abra `app/index.html` diretamente para ler offline ou use o lançador.
+> O catálogo vem de `content/editorial.json`; consulta padrão revisada está vazia e a
+> oficina editorial exige escolha explícita. Veja [fontes e geração](../docs/acervo-editorial.md).
+> A seção abaixo registra a implementação histórica; os três títulos demonstrativos
+> foram substituídos por estas fichas, sem alteração da calculadora.
+
 > **Central de atualizações:** o lançador desta revisão abre a interface existente
 > no Chromium da tela do dispositivo por uma ponte Python restrita a 127.0.0.1.
 > Não há portal para acesso remoto. O HTML direto continua servindo como prévia.

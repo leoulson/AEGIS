@@ -1,0 +1,17 @@
+#aegis-library .catalog-intro{margin:1em 0;max-width:70em;line-height:1.6}
+#aegis-library .catalog-warning{border:2px solid var(--accent);padding:1em;border-radius:10px;margin:1em 0!important;font-weight:600}
+#aegis-library .catalog-state{font-weight:700;color:var(--accent);margin:.7em 0!important}
+#aegis-library .catalog-controls{display:flex;gap:1em;flex-wrap:wrap;align-items:center;margin:1em 0}
+#aegis-library .catalog-controls label{display:flex;gap:.6em;align-items:center}
+#aegis-library .catalog-controls input[type=checkbox]{width:24px;min-height:24px;height:24px}
+#aegis-library .catalog-controls select{font:inherit;color:var(--ink);background:var(--panel);max-width:100%;min-height:44px;border:1px solid var(--line);padding:.5em}
+#aegis-library .catalog-source{padding:1em 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+#aegis-library .catalog-source h3,#aegis-library .detail h3{margin:1em 0 .5em;font-size:1.1em}
+#aegis-library .catalog-source p,#aegis-library .detail p{margin:.7em 0;line-height:1.6}
+#aegis-library .catalog-source a{color:var(--blue);text-decoration:underline}
+#aegis-library #catalog-tagline{font-weight:600;margin:1em 0}
+#aegis-library #catalog-planned{margin:1em 0}#aegis-library #catalog-planned summary{min-height:44px;cursor:pointer}
+#aegis-library .book div{min-width:0}#aegis-library .book{overflow-wrap:anywhere}
+#aegis-library button,#aegis-library :focus-visible{outline-offset:3px}#aegis-library :focus-visible{outline:3px solid var(--blue)}
+#aegis-library button,#aegis-library summary{min-height:44px!important}
+@media(max-width:600px){#aegis-library .catalog-controls{display:block}#aegis-library .catalog-controls label{margin:1em 0;flex-wrap:wrap}}

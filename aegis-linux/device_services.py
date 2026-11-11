@@ -405,7 +405,9 @@ class Services:
             db = self.data / 'library.sqlite3'
             if db.is_file():
                 with contextlib.closing(sqlite3.connect(db.as_uri() + '?mode=ro', uri=True, timeout=1)) as connection:
-                    documents += connection.execute('SELECT count(*) FROM documents').fetchone()[0]
+                    for table in ('documents', 'editorial_cards'):
+                        if connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+                            documents += connection.execute('SELECT count(*) FROM ' + table).fetchone()[0]
         except (OSError, sqlite3.Error, UpdateError):
             documents = None
         result = {'format': 1, 'updated_at': now(), 'model': model, 'architecture': platform.machine(),
