@@ -84,5 +84,5 @@
  nav.querySelectorAll('button').forEach(button=>{if(button!==open)button.addEventListener('click',()=>{panel.hidden=true;open.setAttribute('aria-pressed','false');});});
  if(!session){$('installed').textContent='Prévia local';$('trust').textContent='Abra pelo lançador Python do AEGIS para usar as atualizações. Esta prévia de arquivo não instala pacotes.';controls(false);}
  // Confirm startup only after existing library/calculator scripts and the DOM loaded.
- addEventListener('load',()=>{if(session&&globalThis.AegisMedication&&document.querySelector('.book')&&!globalThis.AEGIS_START_ERRORS?.length)api('ready',{}).catch(error);});
+ addEventListener('load',()=>{if(session&&globalThis.AegisMedication&&(globalThis.AegisCatalog&&document.querySelector('#aegis-books'))&&!globalThis.AEGIS_START_ERRORS?.length)api('ready',{}).catch(error);});
 })();

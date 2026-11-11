@@ -4,10 +4,14 @@
 
 ![Identidade visual AEGIS — escudo laranja e nome completo](docs/assets/aegis-intro-logo.webp)
 
-Protótipo experimental de biblioteca de conhecimento em saúde **offline-first** para **Raspberry Pi 2**. **Protótipo de terminal v0.1.0 + interface Linux com calculadora — não validado clinicamente.**
+Protótipo experimental de biblioteca de conhecimento em saúde **offline-first** para **Raspberry Pi 2**. **Acervo editorial inicial com sete fichas pendentes de revisão profissional — não validado clinicamente.**
 
 ## Objetivo
-Preservar localmente acesso a materiais educativos e referências em saúde em contextos de conectividade instável. A biblioteca de terminal usa Python e SQLite. O protótipo gráfico em `aegis-linux/` usa Chromium/Chrome para abrir arquivos locais, sem servidor web nem dependência de nuvem durante o uso. As duas interfaces ainda não compartilham o acervo.
+O AEGIS reúne referências em saúde para profissionais que precisam consultar conhecimento mesmo sem acesso à internet. O acervo utiliza documentos oficiais do Ministério da Saúde e literatura científica selecionada, com identificação das fontes, versões e estado de revisão editorial.
+
+A fonte única em `content/editorial.json` gera o catálogo Python/SQLite e o JavaScript local da interface Linux. A leitura gráfica funciona por `file://`, sem servidor, `fetch`, CDN ou rede. O lançador existente usa Chromium/Chrome e uma ponte somente de loopback para as ferramentas opcionais do dispositivo; ela não é necessária para ler as fichas.
+
+**Estado real:** sete fichas na oficina editorial, zero fichas com revisão profissional documentada. A consulta padrão mostra somente revisados; entre explicitamente na oficina para ler os materiais pendentes. Nenhuma data de consulta de fonte representa aprovação clínica.
 
 Site de divulgação (independente do aplicativo): https://aegis-offline.leoulson.chatgpt.site
 
@@ -21,29 +25,33 @@ Site de divulgação (independente do aplicativo): https://aegis-offline.leoulso
 ### Arquitetura técnica
 ![Fluxo de dados local](docs/assets/aegis-architecture.svg)
 
-## Funcionalidades da versão 0.1.0
-- Importar catálogo JSON local para SQLite.
-- Buscar documentos por título, categoria ou texto.
-- Ler conteúdo pelo terminal sem conexão à internet.
-- Executar testes automatizados com a biblioteca padrão Python.
+## Acervo inicial e política editorial
 
-## Executar no Raspberry Pi 2 ou Linux
-Requer Python 3 com módulo SQLite (biblioteca padrão).
+Fichas: avaliação inicial/gravidade, febre, dispneia, dor torácica, desidratação, hipoglicemia e guia da calculadora. Navegação por seis áreas; Saúde da mulher e Procedimentos e segurança estão planejadas, sem fichas. As áreas com material indicam as contagens reais.
+
+Há busca por título, tema, palavras-chave, bibliografia e texto, filtros de área/estado, leitura com fontes e limitações, e política editorial offline. Os PDFs e artigos completos não são distribuídos: as fichas contêm sínteses próprias, referências e condições de reprodução verificadas ou explicitamente pendentes.
+
+Veja [fontes, direitos, fluxo de revisão e geração do acervo](docs/acervo-editorial.md).
+
+## Gerar e consultar no terminal
+
+Requer Python 3 com SQLite. Não há dependência de rede no uso:
 
 ```bash
-git clone https://github.com/leoulson/AEGIS.git
-cd AEGIS
+python3 tools/build-catalog.py
+python3 tools/build-catalog.py --check
 python3 -m aegis init
-python3 -m aegis search offline
-python3 -m aegis read welcome
+python3 -m aegis search gravidade --include-pending
+python3 -m aegis read editorial:avaliacao-inicial --include-pending
+python3 -m aegis policy
 python3 -m unittest discover -s tests -v
 ```
 
-Banco padrão: `~/.local/share/aegis/library.sqlite3`. Opcionalmente, use `python3 -m aegis --db /caminho/banco.sqlite3 init`. Somente o clone inicial precisa da internet.
+Sem `--include-pending`, fichas não revisadas ficam fora da busca/leitura editorial. Banco padrão: `~/.local/share/aegis/library.sqlite3`; use `--db /caminho/banco.sqlite3` antes do comando para uma cópia de teste. A importação substitui somente a tabela gerenciada de fichas, preservando documentos pessoais/legados. O antigo `content/demo.json` permanece como fixture legada, sem aprovação clínica presumida.
 
 ## Interface Linux e calculadora recuperadas
 
-**Pacote para download:** [AEGIS-Linux-atualizado.zip](https://github.com/leoulson/AEGIS/raw/refs/heads/main/downloads/AEGIS-Linux-atualizado.zip). Inclui a interface, o lançador, a calculadora, os guias e os testes. Extraia em uma nova pasta para conferir; o download não substitui automaticamente a instalação existente na VM.
+**ZIP histórico (não contém este acervo nem é pacote assinado do atualizador):** [AEGIS-Linux-atualizado.zip](https://github.com/leoulson/AEGIS/raw/refs/heads/main/downloads/AEGIS-Linux-atualizado.zip). Inclui a interface, o lançador, a calculadora, os guias e os testes. Extraia em uma nova pasta para conferir; o download não substitui automaticamente a instalação existente na VM.
 
 Os arquivos locais da conversa “Editar Linux проекта” foram acrescentados em [`aegis-linux/`](aegis-linux/LEIA-ME.md), preservando a biblioteca de terminal existente:
 
@@ -85,13 +93,13 @@ testar em instalação isolada e conferir os limites e o roteiro no Raspberry Pi
 ```text
 aegis/           aplicação de terminal
 aegis-linux/     protótipo gráfico, lançador e calculadora offline
-content/         dados demonstrativos
+content/         fonte editorial única, catálogo gerado e fixture legada
 docs/assets/     identidade visual, arquitetura e imagem do Raspberry Pi 2
 tests/           testes automatizados
 ```
 
 ## Limites e próximos passos
-Não estão implementados: imagem Linux customizada, integração do acervo SQLite com a interface gráfica, rede Wi-Fi local, mapas offline, bateria, sincronização, recursos de IA, biblioteca clínica curada ou arquivo CAD imprimível. Os próximos passos são testar em Raspberry Pi 2 físico, medir desempenho e alimentação, construir um projeto mecânico dimensionado e definir processo de curadoria e licenciamento da literatura.
+Não estão implementados: imagem Linux customizada, leitor de documentos pessoais do SQLite na interface gráfica, rede Wi-Fi local, mapas offline, bateria, sincronização, IA generativa, aprovação clínica do acervo ou arquivo CAD imprimível. As duas interfaces compartilham agora o catálogo editorial; isso não é um portal remoto nem validação profissional. Os próximos passos são testar em Raspberry Pi 2 físico, medir desempenho e alimentação, construir um projeto mecânico dimensionado e definir processo de curadoria e licenciamento da literatura.
 
 **Aviso:** biblioteca demonstrativa e calculadora experimental para conferência aritmética, com referências internacionais que exigem revisão profissional antes de uso clínico. O AEGIS não é dispositivo médico, não oferece diagnóstico, triagem ou prescrição. Materiais clínicos futuros exigem avaliação e atualização editorial.
 

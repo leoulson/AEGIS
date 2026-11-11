@@ -1,0 +1,915 @@
+{
+  "format": 1,
+  "catalog_id": "aegis-health-initial",
+  "edition": "2026-11-11-draft",
+  "tagline": "A conexão cai. O conhecimento permanece.",
+  "presentation": "O AEGIS reúne referências em saúde para profissionais que precisam consultar conhecimento mesmo sem acesso à internet. Este acervo inicial utiliza documentos oficiais do Ministério da Saúde e literatura científica selecionada, com identificação das fontes, versões e estado de revisão editorial.",
+  "notice": "Protótipo experimental. Fichas pendentes não estão liberadas para consulta assistencial; a consulta de rascunhos exige escolha explícita da oficina editorial.",
+  "areas": [
+    {
+      "id": "urgencia",
+      "title": "Urgência e emergência"
+    },
+    {
+      "id": "aps",
+      "title": "Atenção primária"
+    },
+    {
+      "id": "crianca",
+      "title": "Saúde da criança"
+    },
+    {
+      "id": "mulher",
+      "title": "Saúde da mulher"
+    },
+    {
+      "id": "medicamentos",
+      "title": "Medicamentos e cálculos"
+    },
+    {
+      "id": "seguranca",
+      "title": "Procedimentos e segurança"
+    }
+  ],
+  "sources": [
+    {
+      "id": "ms-cab28",
+      "title": "Acolhimento à demanda espontânea: queixas mais comuns na Atenção Básica",
+      "citation": "Brasil. Ministério da Saúde. Secretaria de Atenção à Saúde. Departamento de Atenção Básica. Acolhimento à demanda espontânea: queixas mais comuns na Atenção Básica. Cadernos de Atenção Básica, n. 28, v. II. 1. ed., 1. reimpr. Brasília: Ministério da Saúde; 2013. 290 p. ISBN 978-85-334-1973-5.",
+      "url": "https://bvsms.saude.gov.br/bvs/publicacoes/acolhimento_demanda_espontanea_queixas_comuns_cab28v2.pdf",
+      "edition": "1ª edição, 1ª reimpressão, 2013; copyright 2012",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura do documento e dos metadados indicados; consulta documental, não revisão clínica.",
+        "sha256": "74ad6c9c77abaa4a83831717677179d7590bb916644718be278c06fe8531d57d"
+      },
+      "reproduction": {
+        "status": "verified",
+        "terms": "Expediente permite reprodução com citação da fonte e sem venda ou finalidade comercial. Não é domínio público declarado.",
+        "evidence": "Expediente, PDF p. 4. Original completo não distribuído pelo AEGIS."
+      },
+      "appraisal": "Documento oficial brasileiro de apoio à APS, organizado por queixas e risco/vulnerabilidade; útil para contextualizar acolhimento e referência. É orientação institucional de 2013, não uma revisão sistemática atual nem prova de eficácia de cada conduta.",
+      "pending": [
+        "Atualidade e eventual substituição integral não confirmadas. Não usar como protocolo vigente sem revisão profissional/local.",
+        "Não foram incorporados esquemas farmacológicos antigos, limiares antigos de hipoglicemia, tabelas de oxigênio ou doses deste documento."
+      ]
+    },
+    {
+      "id": "ms-aidpi",
+      "title": "Manual de quadros de procedimentos: AIDPI Criança: 2 meses a 5 anos",
+      "citation": "Brasil. Ministério da Saúde; Organização Pan-Americana da Saúde; Fundo das Nações Unidas para a Infância. Manual de quadros de procedimentos: AIDPI Criança: 2 meses a 5 anos. Brasília: Ministério da Saúde; 2017. 74 p. ISBN 978-85-334-2502-6.",
+      "url": "https://bvsms.saude.gov.br/bvs/publicacoes/manual_quadros_procedimentos_aidpi_crianca_2meses_5anos.pdf",
+      "edition": "1ª edição, versão eletrônica, 2017",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura do documento e dos metadados indicados; consulta documental, não revisão clínica.",
+        "sha256": "22e24ded3e5ce5eeadf409853715dd8647b9c58833d1e89891f900ca32f3a9fe"
+      },
+      "reproduction": {
+        "status": "verified",
+        "terms": "CC BY-NC-SA 4.0, conforme expediente.",
+        "evidence": "Expediente, PDF p. 4. Original completo não distribuído."
+      },
+      "appraisal": "Quadros oficiais para avaliação integrada de crianças de 2 meses a menos de 5 anos. População e classificação são pediátricas; não extrapolar a neonatos, crianças maiores, gestantes ou adultos.",
+      "pending": [
+        "Confirmar atualização/substituição e treinamento local antes de adoção assistencial. A data de consulta não torna a edição de 2017 atual.",
+        "O sumário diverge da paginação do corpo nos planos de reidratação. As citações usam a numeração do corpo e localizadores de página PDF conferidos, não a indicação antiga do sumário."
+      ]
+    },
+    {
+      "id": "sci-ews",
+      "title": "Early warning scores for detecting deterioration in adult hospital patients: systematic review and critical appraisal of methodology",
+      "citation": "Gerry S, Bonnici T, Birks J, Kirtley S, Virdee PS, Watkinson PJ, Collins GS. Early warning scores for detecting deterioration in adult hospital patients: systematic review and critical appraisal of methodology. BMJ. 2020;369:m1501. doi:10.1136/bmj.m1501. PMID:32434791.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7238890/",
+      "edition": "Publicado em 20/05/2020",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura do documento e dos metadados indicados; consulta documental, não revisão clínica.",
+        "sha256": "38d42987272aba131c060567c8f93ffbf6832f5e825cee747da098f3c976de1f"
+      },
+      "reproduction": {
+        "status": "verified",
+        "terms": "Licença CC BY 4.0 indicada no elemento license e nos metadados Europe PMC.",
+        "evidence": "O XML contém também uma linha de copyright genérica discordante; priorizar a licença explícita e reconfirmar antes de redistribuir o original. Não distribuído."
+      },
+      "appraisal": "Revisão sistemática com avaliação crítica de desenvolvimento/validação de escores em adultos internados. Identificou alto risco de viés nos estudos incluídos, limitações de calibração e descrição de populações. Não valida um escore para a APS brasileira, crianças ou uso pelo AEGIS.",
+      "pending": [
+        "Busca dos estudos até junho de 2019; avaliar evidência posterior antes de uso.",
+        "Metadados Europe PMC consultados não indicaram retratação/correção; isso não comprova ausência em todos os registros."
+      ],
+      "doi": "10.1136/bmj.m1501",
+      "verification_urls": [
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7238890/fullTextXML",
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:32434791%20AND%20SRC:MED&resultType=core&format=json"
+      ]
+    },
+    {
+      "id": "sci-fever",
+      "title": "Fever therapy in febrile adults: systematic review with meta-analyses and trial sequential analyses",
+      "citation": "Holgersson J, Ceric A, Sethi N, Nielsen N, Jakobsen JC. Fever therapy in febrile adults: systematic review with meta-analyses and trial sequential analyses. BMJ. 2022;378:e069620. doi:10.1136/bmj-2021-069620. PMID:35820685.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9274300/",
+      "edition": "Publicado em 12/07/2022",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura do documento e dos metadados indicados; consulta documental, não revisão clínica.",
+        "sha256": "72c66f7285fb262e8b96bf7f62fb026f08fa060bf689ffbe6582401bed10443d"
+      },
+      "reproduction": {
+        "status": "verified",
+        "terms": "CC BY-NC 4.0, conforme licença do artigo e metadados.",
+        "evidence": "Permissions no texto completo XML. Original completo não distribuído."
+      },
+      "appraisal": "Revisão de ensaios randomizados em adultos, com meta-análises, análise sequencial e GRADE. Não demonstrou benefício da terapia da febre em mortalidade/eventos adversos graves no conjunto avaliado. Os ensaios tinham alto risco de viés; populações, intervenções e cenários variaram. Conforto sintomático e desfechos críticos são perguntas diferentes; não extrapolar a crianças.",
+      "pending": [
+        "Busca até julho de 2021. Não representa revisão da literatura até 2026.",
+        "Europe PMC registra comentário em Ann Intern Med (PMID 36315945), não retratação; não avaliado como nova recomendação. Nenhuma retratação/correção identificada nos metadados consultados; verificação não exaustiva."
+      ],
+      "doi": "10.1136/bmj-2021-069620",
+      "verification_urls": [
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9274300/fullTextXML",
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:35820685%20AND%20SRC:MED&resultType=core&format=json"
+      ]
+    },
+    {
+      "id": "sci-ors",
+      "title": "Reduced osmolarity oral rehydration solution for treating dehydration due to diarrhoea in children: systematic review",
+      "citation": "Hahn S, Kim Y, Garner P. Reduced osmolarity oral rehydration solution for treating dehydration due to diarrhoea in children: systematic review. BMJ. 2001;323(7304):81–85. doi:10.1136/bmj.323.7304.81. PMID:11451782.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC34542/",
+      "edition": "BMJ, 2001;323(7304):81–85",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura do documento e dos metadados indicados; consulta documental, não revisão clínica.",
+        "sha256": "ffafbdbd1ce3dee755c5fd55a5a7f2e7264e16cc4abfab2ae4b00a992d750ff9"
+      },
+      "reproduction": {
+        "status": "not_established",
+        "terms": "Permissão de redistribuição do original não estabelecida nesta consulta. Acesso ao texto não equivale a licença de reprodução.",
+        "evidence": "Somente síntese própria e referência; nenhum original incluído."
+      },
+      "appraisal": "Revisão sistemática de ensaios randomizados de SRO em crianças hospitalizadas com diarreia e desidratação. Comparou formulações e necessidade de infusão intravenosa não programada, não a substituição do atendimento de choque por hidratação domiciliar. Evidência antiga; aplicabilidade a adultos, contextos atuais e assistência comunitária é limitada.",
+      "pending": [
+        "Revisão histórica de 2001, não escolhida como protocolo contemporâneo de formulação ou volume.",
+        "Europe PMC registra comentários (PMIDs 11451764, 11713745 e 11713746), não retratação. Nenhuma retratação/correção identificada nos metadados consultados; checagem não exaustiva."
+      ],
+      "doi": "10.1136/bmj.323.7304.81",
+      "verification_urls": [
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:11451782%20AND%20SRC:MED&resultType=core&format=json"
+      ]
+    },
+    {
+      "id": "aegis-calculator",
+      "title": "Calculadora AEGIS: implementação local existente",
+      "citation": "AEGIS. medication-core.js e medication-ui.js. Código local inspecionado nesta implementação; não é diretriz clínica.",
+      "url": "https://github.com/leoulson/AEGIS",
+      "edition": "Código preservado da base 404e9f131b6fc9bfe9d735c678b75f0a24af2c9b",
+      "consulted_on": "2026-11-11",
+      "verified": true,
+      "verification": {
+        "method": "Leitura direta dos dois arquivos; hashes locais permitem detectar divergência posterior.",
+        "files": {
+          "aegis-linux/app/medication-core.js": "7343a51e63201f42312ed77bb2e4a3672425580d070f4d876cb2a01d63820c82",
+          "aegis-linux/app/medication-ui.js": "44ce2a4db68911f87eed25d3d079a131c540680f6b36281963f6aa8f2b85b225"
+        }
+      },
+      "reproduction": {
+        "status": "verified",
+        "terms": "Código AEGIS sob MIT. Não altera direitos das referências MSF/NHS incorporadas no módulo.",
+        "evidence": "LICENSE do repositório; nenhuma dose ou regra alterada."
+      },
+      "appraisal": "Verificação funcional/documental do software. Não comprova adequação clínica das fórmulas, doses, limites ou referências internacionais.",
+      "pending": [
+        "Revisão profissional do módulo e de suas fontes clínicas permanece pendente; não foram reconferidas páginas MSF/NHS nesta tarefa."
+      ]
+    }
+  ],
+  "policy": {
+    "title": "Política editorial e direitos autorais",
+    "sections": [
+      {
+        "title": "Escopo e separação assistencial",
+        "text": "O AEGIS é experimental. As fichas desta implementação são sínteses assistidas por IA, pendentes de revisão profissional. A consulta padrão mostra somente materiais revisados; a oficina editorial exige escolha explícita e identifica o estado em cada resultado e leitura. Não há materiais revisados neste primeiro conjunto."
+      },
+      {
+        "title": "Seleção de fontes",
+        "text": "Documentos oficiais do Ministério da Saúde contextualizam políticas e recomendações brasileiras. Artigos complementam perguntas específicas; avaliar desenho, população, comparadores, desfechos, viés, precisão, atualidade e aplicabilidade. DOI, indexação e revisão por pares não substituem a análise crítica."
+      },
+      {
+        "title": "Atualização e divergências",
+        "text": "Registrar edição e data de consulta separadas da revisão clínica. Procurar substituições, correções e retratações na fonte oficial e nos registros bibliográficos; registrar a extensão e limites da busca. Divergências de população e objetivo não devem ser fundidas em um protocolo único. Fonte antiga permanece identificada e pendente de atualização."
+      },
+      {
+        "title": "Revisão profissional",
+        "text": "Somente alterar o estado para revisado quando existir registro verificável da revisão, identificação real do responsável, data, escopo e evidência documental. Não atribuir aprovação a profissionais não envolvidos. Revisão documental de uma URL ou teste de software não é revisão clínica."
+      },
+      {
+        "title": "Correções",
+        "text": "Registrar o problema e a ficha/fonte afetada em issue do repositório ou no fluxo editorial local, sem dados de pacientes. Corrigir a fonte editorial única, documentar a alteração, regenerar catálogos e executar verificações. Retirar do estado revisado conteúdos cuja segurança/atualidade esteja em dúvida até nova revisão."
+      },
+      {
+        "title": "Direitos e reprodução",
+        "text": "O pacote inclui textos próprios de síntese sob MIT e referências bibliográficas; não distribui PDFs ou artigos completos. Permissões dos originais são registradas separadamente e não são ampliadas pela licença do código. Acesso aberto ou disponibilidade na internet não significa domínio público. Transcrição literal, quando autorizada, deve ser identificada, breve, atribuída e compatível com a licença."
+      },
+      {
+        "title": "Rastreabilidade e privacidade",
+        "text": "Cada afirmação traz vínculo à fonte e localização. Síntese AEGIS, observação editorial e transcrição original são tipos distintos. Não preencher seções sem conteúdo fundamentado; seções vazias são omitidas. Não inserir prontuários, dados pessoais, credenciais ou informações de pacientes no catálogo ou em pedidos de correção."
+      }
+    ]
+  },
+  "cards": [
+    {
+      "id": "avaliacao-inicial",
+      "title": "Avaliação inicial e reconhecimento de gravidade",
+      "summary": "Organizar a primeira avaliação, reconhecer necessidade de atenção imediata e explicitar os limites de escores.",
+      "category": "urgencia",
+      "keywords": [
+        "acolhimento",
+        "risco",
+        "vulnerabilidade",
+        "priorização",
+        "sinais vitais"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Adultos na APS; sinais pediátricos abaixo são exclusivos da faixa AIDPI.",
+      "context": "Primeira escuta em unidade de saúde; não é algoritmo automatizado de triagem.",
+      "objective": "Organizar a primeira avaliação, reconhecer necessidade de atenção imediata e explicitar os limites de escores.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Priorizar por risco e vulnerabilidade, e não somente por ordem de chegada. Investigar motivo da procura e observar rapidamente consciência, respiração, circulação/perfusão e sofrimento intenso; reservar espaço para escuta individual.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 16–20 (PDF 17–21)."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Comprometimento de via aérea, dificuldade respiratória grave, choque ou alteração importante da consciência exigem avaliação e intervenção imediatas pela equipe; a classificação não deve atrasar o cuidado.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "Introdução e fluxogramas de risco; pp. 16–20, 62, 74."
+              }
+            ]
+          },
+          {
+            "kind": "synthesis",
+            "text": "Na criança de 2 meses a menos de 5 anos, incapacidade de beber/mamar, vômitos de tudo, convulsões ou letargia/inconsciência integram os sinais gerais de perigo; o quadro AIDPI também avalia perfusão e esforço respiratório.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "p. 6 (PDF 8)."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Acionar a equipe e a rede de urgência quando necessário, iniciar o suporte compatível com capacitação e recursos locais e comunicar as informações essenciais ao serviço de referência. O acolhimento continua mesmo quando é necessário encaminhar.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 16–21, 49–51 e fluxogramas de referência."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "A estratificação depende de contexto e avaliação clínica. Esta ficha não calcula nem valida escores, não define tempos universais de atendimento e não substitui protocolos locais atualizados.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 16–20."
+              }
+            ]
+          }
+        ],
+        "follow_up": [],
+        "evidence_context": [
+          {
+            "kind": "synthesis",
+            "text": "Uma revisão sistemática de escores de alerta em adultos internados identificou limitações metodológicas relevantes e alto risco de viés nos estudos incluídos. Desempenho hospitalar não valida automaticamente o uso na APS brasileira nem em pediatria.",
+            "citations": [
+              {
+                "source_id": "sci-ews",
+                "locator": "Abstract; Results; Discussion."
+              }
+            ]
+          }
+        ]
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Revisão da rede local de referência e dos critérios de risco pendente. Não aplicar sinais pediátricos como regra universal em adultos."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "febre",
+      "title": "Febre: avaliação contextual e sinais de alerta",
+      "summary": "Diferenciar a avaliação de gravidade da decisão de tratar o desconforto febril.",
+      "category": "aps",
+      "keywords": [
+        "temperatura",
+        "infecção",
+        "meningismo",
+        "malária",
+        "antitérmico"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Crianças de 2 meses a menos de 5 anos nos quadros AIDPI; evidência complementar de antitérmicos refere-se a adultos.",
+      "context": "Avaliação em serviço de saúde; idade e contexto epidemiológico devem ser identificados antes de usar uma classificação.",
+      "objective": "Diferenciar a avaliação de gravidade da decisão de tratar o desconforto febril.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Registrar duração da febre, evolução e sintomas associados; na faixa AIDPI, investigar risco de malária e observar rigidez de nuca, petéquias e abaulamento de fontanela. Não reduzir a avaliação a uma temperatura isolada.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 12–13 (PDF 14–15)."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Sinais gerais de perigo, rigidez de nuca, petéquias ou abaulamento de fontanela integram a classificação de doença febril muito grave nos quadros pediátricos; exigem assistência e referência urgentes conforme avaliação completa.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 6 e 12–13."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Completar rapidamente a avaliação da criança com sinais de perigo e organizar a referência urgente, com os cuidados prévios definidos no protocolo aplicável e compatíveis com a equipe. Não retardar a avaliação de gravidade para observar a resposta a um antitérmico.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 6, 12–13, 22–27."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "Esta síntese não fornece algoritmo de febre para neonatos, gestação, imunossupressão, sepse ou dengue. Atualizar esses protocolos e revisar profissionalmente a ficha antes de ampliar seu escopo.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "Escopo do manual: 2 meses a menos de 5 anos."
+              }
+            ]
+          }
+        ],
+        "follow_up": [
+          {
+            "kind": "synthesis",
+            "text": "Fornecer orientação de retorno imediato diante de sinais de perigo ou piora e combinar reavaliação de acordo com a classificação e o contexto, em vez de estabelecer um prazo único para todas as causas de febre.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "Quadros de febre, pp. 12–13; retorno imediato, p. 33 (PDF 14–15 e 35)."
+              }
+            ]
+          }
+        ],
+        "evidence_context": [
+          {
+            "kind": "synthesis",
+            "text": "A revisão de ensaios randomizados em adultos não demonstrou redução de mortalidade ou eventos adversos graves pelo conjunto de terapias da febre estudadas. Isso não é uma recomendação automática de evitar alívio de desconforto, nem pode ser extrapolado para crianças; benefício sintomático e desfechos críticos são perguntas distintas.",
+            "citations": [
+              {
+                "source_id": "sci-fever",
+                "locator": "Abstract; Discussion; limitações e GRADE."
+              }
+            ]
+          }
+        ]
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Não aplicar resultados de adultos às decisões pediátricas do AIDPI. Protocolos atuais por etiologia e populações especiais permanecem pendentes."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "dispneia",
+      "title": "Dispneia: reconhecer comprometimento respiratório",
+      "summary": "Identificar sinais de comprometimento respiratório e necessidade de referência antes de presumir uma causa benigna.",
+      "category": "urgencia",
+      "keywords": [
+        "falta de ar",
+        "esforço respiratório",
+        "tiragem",
+        "estridor",
+        "oxigenação"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Adultos com queixa respiratória na APS; observações AIDPI limitadas a 2 meses a menos de 5 anos.",
+      "context": "Avaliação inicial, sem diagnóstico etiológico automático.",
+      "objective": "Identificar sinais de comprometimento respiratório e necessidade de referência antes de presumir uma causa benigna.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Caracterizar início, evolução, relação com esforço, tosse, febre, dor no peito e antecedentes cardiopulmonares. Observar frequência e esforço respiratórios, capacidade de falar ou alimentar-se, nível de consciência e perfusão.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 62–64 e fluxograma p. 74."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Via aérea comprometida, sofrimento respiratório intenso, cianose, alteração de consciência ou sinais de choque justificam atendimento imediato. Incapacidade de articular frases e uso acentuado de musculatura acessória são sinais de gravidade no fluxograma.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "p. 74 (PDF 75)."
+              }
+            ]
+          },
+          {
+            "kind": "synthesis",
+            "text": "Na criança, sinais gerais de perigo ou estridor em repouso demandam classificação e assistência urgente; a avaliação da tosse/dificuldade respiratória tem critérios específicos por faixa etária.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 6–9 (PDF 8–11)."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Solicitar apoio e referência conforme gravidade; monitorar e oferecer suporte dentro da competência e recursos locais. Na suspeita de edema agudo pulmonar, o documento orienta acionar prontamente o serviço móvel de urgência e referenciar para hospital.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 73–74."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "A queixa é multifatorial; uma hipótese de ansiedade não deve substituir a avaliação inicial das causas respiratórias e cardiovasculares. Não foram transcritas metas de oxigênio, doses, critérios de antibiótico nem tabelas antigas de frequência respiratória.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 62–74."
+              }
+            ]
+          }
+        ],
+        "follow_up": [],
+        "evidence_context": []
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Confrontar critérios pediátricos, metas de oxigenação e protocolos de asma/pneumonia com versões atuais antes de revisão clínica."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "dor-toracica",
+      "title": "Dor torácica: reconhecimento de risco e referência",
+      "summary": "Reconhecer apresentações potencialmente graves e evitar exclusão indevida de síndrome coronariana por um achado isolado.",
+      "category": "urgencia",
+      "keywords": [
+        "dor no peito",
+        "síndrome coronariana",
+        "isquemia",
+        "sudorese",
+        "irradiação"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Adultos; não é protocolo pediátrico ou obstétrico.",
+      "context": "Primeiro atendimento na APS ou serviço de saúde com necessidade de organizar a rede de urgência.",
+      "objective": "Reconhecer apresentações potencialmente graves e evitar exclusão indevida de síndrome coronariana por um achado isolado.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Caracterizar início, duração, intensidade, irradiação e relação com esforço; investigar falta de ar, sinais de insuficiência cardíaca, história cardiovascular e fatores de risco.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 121–126 (PDF 122–127)."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Dor associada a instabilidade hemodinâmica, comprometimento respiratório ou alteração da consciência exige atendimento imediato. A apresentação não clássica ou a ausência de fatores de risco não exclui, isoladamente, isquemia aguda.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 121–126 e quadro 45."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Diante de suspeita de síndrome coronariana aguda, contactar prontamente o serviço de emergência e organizar remoção; evitar esforço físico, monitorar sinais vitais e consciência e registrar evolução e medidas até a transferência.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "p. 126 (PDF 127), tratamento das SCA."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "O diagnóstico diferencial inclui causas cardíacas e não cardíacas. Esta ficha não fornece regra de exclusão, prescrição, dose ou indicação universal de oxigênio; a seção de tratamento de 2013 requer confronto com diretrizes atuais e recursos locais.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 121–128."
+              }
+            ]
+          }
+        ],
+        "follow_up": [],
+        "evidence_context": []
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Atualização de manejo coronariano e outras causas graves pendente; não transformar a lista de características da dor em ferramenta de alta."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "desidratacao",
+      "title": "Desidratação: avaliação clínica e contexto da reidratação",
+      "summary": "Reconhecer desidratação e gravidade, distinguindo as situações de orientação, observação e referência.",
+      "category": "crianca",
+      "keywords": [
+        "diarreia",
+        "vômitos",
+        "sro",
+        "osmolaridade",
+        "hidratação",
+        "perfusão"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Ênfase em crianças de 2 meses a menos de 5 anos com diarreia; não extrapolar esquemas pediátricos a adultos.",
+      "context": "Avaliação no serviço de saúde; não é calculadora de volume ou formulação de solução.",
+      "objective": "Reconhecer desidratação e gravidade, distinguindo as situações de orientação, observação e referência.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Investigar perdas, aceitação de líquidos e evolução. Avaliar estado geral, olhos, sede/capacidade de beber, sinal da prega, perfusão e diurese; a classificação exige a combinação e o contexto dos sinais, não um achado isolado.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 10–11 (PDF 12–13)."
+              }
+            ]
+          },
+          {
+            "kind": "synthesis",
+            "text": "O CAB 28 relaciona consciência, mucosas, pulso, perfusão e diurese à avaliação de gravidade.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 56–57."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Letargia ou inconsciência, ingestão muito prejudicada e sinais circulatórios alterados exigem avaliação urgente. No AIDPI, desidratação grave é uma classificação por combinação de sinais; outras classificações graves também modificam a referência.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 10–11 e 31 (PDF 12–13 e 33)."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Sem desidratação, orientar continuidade da alimentação e líquidos e retorno por piora; com desidratação, o AIDPI prevê SRO e observação na unidade. Desidratação grave demanda tratamento imediato e decisão de referência conforme o quadro completo e os recursos.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 10–11 e 29–31 (PDF 12–13 e 31–33)."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "Não foram incorporados volumes, velocidade de infusão ou receitas caseiras. A via, a solução e a necessidade de referência dependem de avaliação clínica, comorbidades e protocolo atualizado.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "Planos A, B e C, pp. 29–31 (PDF 31–33)."
+              }
+            ]
+          }
+        ],
+        "follow_up": [
+          {
+            "kind": "synthesis",
+            "text": "Reavaliar a classificação após a reidratação e orientar sinais para retorno imediato; a persistência de perdas ou incapacidade de ingerir líquidos requer nova avaliação.",
+            "citations": [
+              {
+                "source_id": "ms-aidpi",
+                "locator": "pp. 29–31 e 33 (PDF 31–33 e 35)."
+              }
+            ]
+          }
+        ],
+        "evidence_context": [
+          {
+            "kind": "synthesis",
+            "text": "A revisão sistemática de 2001 comparou SRO de osmolaridade reduzida com a formulação então padrão da OMS em crianças hospitalizadas. Os achados sobre necessidade de infusão não autorizam tratar choque em casa nem substituir protocolos atuais por uma formulação escolhida a partir desta síntese.",
+            "citations": [
+              {
+                "source_id": "sci-ors",
+                "locator": "Abstract; Methods; Discussion."
+              }
+            ]
+          }
+        ]
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Fonte científica histórica, com comentários publicados; revisar evidência posterior, comorbidades e formulações atuais antes de uso profissional."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "hipoglicemia",
+      "title": "Hipoglicemia: reconhecimento e segurança no primeiro atendimento",
+      "summary": "Identificar manifestações e gravidade, avaliar o contexto e organizar cuidado e acompanhamento.",
+      "category": "urgencia",
+      "keywords": [
+        "glicemia",
+        "sudorese",
+        "tremor",
+        "consciência",
+        "diabetes",
+        "segurança"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Pessoas com diabetes na APS, com atenção à idade, tratamento e capacidade de deglutir; sem esquema neonatal.",
+      "context": "Reconhecimento de episódio suspeito e articulação de assistência; não é protocolo de dose de glicose ou glucagon.",
+      "objective": "Identificar manifestações e gravidade, avaliar o contexto e organizar cuidado e acompanhamento.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "synthesis",
+            "text": "Investigar uso de medicamentos para diabetes, alimentação, episódios prévios e sintomas como fome, tremor, sudorese, palidez, alteração do comportamento e dificuldade cognitiva. Avaliar prontamente a glicemia disponível no contexto clínico.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 49–51 e fluxograma de descompensação do diabetes."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "synthesis",
+            "text": "Alteração importante de consciência, convulsões ou deterioração clínica demandam suporte e referência urgentes; manifestações neurológicas podem confundir-se com outras emergências e não devem ser avaliadas por um único sintoma.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 50–51."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "synthesis",
+            "text": "Reconhecer e tratar o episódio conforme o protocolo vigente e recursos do serviço, reavaliar e acionar a rede de urgência nos casos graves. Na orientação longitudinal, trabalhar com usuário e rede de apoio o reconhecimento de sintomas e fatores precipitantes.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 49–51."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "O CAB 28 apresenta limiares e esquemas de 2013 que não foram adotados nesta ficha. A definição operacional, via e dose de correção, risco de aspiração, monitoramento e recorrência precisam ser conferidos em protocolo atual por profissional habilitado. Não usar esta síntese como prescrição.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 50–51."
+              }
+            ]
+          }
+        ],
+        "follow_up": [
+          {
+            "kind": "synthesis",
+            "text": "Após a alta do episódio, programar retorno para revisar o manejo e investigar circunstâncias associadas; fortalecer orientação e apoio para reduzir recorrência, sem ajustar insulina automaticamente pela ficha.",
+            "citations": [
+              {
+                "source_id": "ms-cab28",
+                "locator": "pp. 49–51."
+              }
+            ]
+          }
+        ],
+        "evidence_context": []
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Confronto com PCDT e recomendações atuais de diabetes pendente; a ficha não fixa um ponto de corte glicêmico nem um esquema de correção."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    },
+    {
+      "id": "guia-calculadora",
+      "title": "Guia de uso e limites da calculadora experimental",
+      "summary": "Documentar o comportamento efetivamente implementado, sem criar ou modificar doses, limites ou regras.",
+      "category": "medicamentos",
+      "keywords": [
+        "mg/dose",
+        "mg/kg/dose",
+        "mg/kg/dia",
+        "concentração",
+        "volume",
+        "calculadora"
+      ],
+      "audience": "Profissionais de saúde; material para avaliação editorial, não liberado para consulta assistencial.",
+      "population": "Profissionais que conferem uma prescrição já definida; não destinada a escolher tratamento ou dose.",
+      "context": "Ferramenta local de aritmética e referências internacionais pré-existentes, sem validação clínica documentada.",
+      "objective": "Documentar o comportamento efetivamente implementado, sem criar ou modificar doses, limites ou regras.",
+      "sections": {
+        "initial_assessment": [
+          {
+            "kind": "editorial",
+            "text": "Conferir a população, idade, peso, unidade da dose prescrita e número inteiro de tomadas em 24 horas. Para converter para mL, informar conjuntamente a quantidade em mg e o volume correspondente da apresentação.",
+            "citations": [
+              {
+                "source_id": "aegis-calculator",
+                "locator": "medication-core.js: calculate/number; medication-ui.js: formulário e onsubmit."
+              }
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "kind": "editorial",
+            "text": "No modo manual, a aritmética não verifica indicação, contraindicações ou limites clínicos. No modo de referências, o módulo bloqueia condições especiais declaradas e esquemas fora dos limites cadastrados; isso não constitui validação da prescrição.",
+            "citations": [
+              {
+                "source_id": "aegis-calculator",
+                "locator": "reference; manual/reference UI."
+              }
+            ]
+          }
+        ],
+        "source_based_actions": [
+          {
+            "kind": "editorial",
+            "text": "mg/dose mantém a dose por tomada; mg/kg/dose multiplica pelo peso; mg/kg/dia multiplica pelo peso e divide pelas tomadas. Total diário = dose por tomada × tomadas. Volume = dose por tomada ÷ concentração em mg/mL, quando informada.",
+            "citations": [
+              {
+                "source_id": "aegis-calculator",
+                "locator": "calculate."
+              }
+            ]
+          },
+          {
+            "kind": "editorial",
+            "text": "O código aceita vírgula ou ponto decimal e rejeita formatos ambíguos, valores inválidos, unidades desconhecidas e frequência não inteira. O resultado em mL é exibido com até seis casas, sem adequar automaticamente à graduação da seringa.",
+            "citations": [
+              {
+                "source_id": "aegis-calculator",
+                "locator": "number/calculate e fmt na interface."
+              }
+            ]
+          }
+        ],
+        "limits_and_referral": [
+          {
+            "kind": "editorial",
+            "text": "O cadastro existente contém paracetamol, ibuprofeno e cetirizina com fontes MSF/NHS. Estas fontes não são documentos do Ministério da Saúde; esta tarefa não revisou, acrescentou ou alterou suas doses. Limites de idade, condições especiais e frequências continuam sendo os do código original.",
+            "citations": [
+              {
+                "source_id": "aegis-calculator",
+                "locator": "sources/reference; hashes dos arquivos na referência."
+              }
+            ]
+          }
+        ],
+        "follow_up": [],
+        "evidence_context": []
+      },
+      "editorial": {
+        "state": "pending_professional_review",
+        "reviewer": null,
+        "reviewed_on": null,
+        "source_consulted_on": "2026-11-11",
+        "provenance": "Síntese inicial do AEGIS assistida por IA; sem revisão clínica documentada.",
+        "notes": [
+          "Revisão clínica da calculadora e suas referências internacionais pendente. Consulta documental do código separada da data de consulta clínica registrada no próprio módulo."
+        ]
+      },
+      "rights": {
+        "text_license": "MIT",
+        "terms": "Texto próprio de síntese do AEGIS sob a licença do repositório. Originais não incluídos. Fontes preservam seus direitos e condições de reprodução; não se afirma domínio público."
+      }
+    }
+  ]
+}
